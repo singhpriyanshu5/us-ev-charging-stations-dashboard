@@ -211,7 +211,7 @@ col_dc, col_open = st.columns(2)
 
 with col_dc:
     df_dc = df.copy()
-    df_dc["dc_fast_pct"] = (df_dc["total_dc_fast_ports"] / df_dc["total_stations"] * 100).round(1)
+    df_dc["dc_fast_pct"] = (df_dc["stations_with_dc_fast"] / df_dc["total_stations"] * 100).round(1)
     dc_sorted = df_dc.sort_values("dc_fast_pct", ascending=True).tail(20)
     fig_dc_pct = px.bar(
         dc_sorted,

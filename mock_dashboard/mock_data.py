@@ -76,6 +76,7 @@ def get_state_data() -> pd.DataFrame:
         level2_ports = int(total_stations * np.random.uniform(2.5, 4.0))
         dc_fast_ports = int(total_stations * np.random.uniform(0.3, 0.8))
         total_ports = level2_ports + dc_fast_ports
+        stations_with_dc_fast = int(total_stations * np.random.uniform(0.15, 0.40))
 
         factor = ADOPTION_FACTOR.get(abbr, 0.6)
         ev_registrations = int(pop / 100_000 * factor * np.random.uniform(900, 1100))
@@ -95,6 +96,7 @@ def get_state_data() -> pd.DataFrame:
             "total_level2_ports": level2_ports,
             "total_dc_fast_ports": dc_fast_ports,
             "total_ports": total_ports,
+            "stations_with_dc_fast": stations_with_dc_fast,
             "ev_registrations": ev_registrations,
             "stations_per_100k": stations_per_100k,
             "evs_per_station": evs_per_station,
