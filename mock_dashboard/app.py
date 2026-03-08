@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
-from mock_data import get_state_data, get_city_data
+from mock_data import get_state_data, get_city_data, get_timeseries_data, get_region_data
 
 st.set_page_config(
     page_title="EV Charging Infrastructure Dashboard",
@@ -12,6 +12,8 @@ st.set_page_config(
 # ── Data ──────────────────────────────────────────────────────────────────────
 df = get_state_data()
 cities = get_city_data()
+timeseries = get_timeseries_data()
+regions = get_region_data()
 
 # ── Header ────────────────────────────────────────────────────────────────────
 st.title("EV Charging Infrastructure & Adoption Dashboard")
@@ -166,3 +168,148 @@ fig_cities = px.bar(
 fig_cities.update_traces(texttemplate="%{text:,}", textposition="outside")
 fig_cities.update_layout(height=460, margin={"t": 50}, xaxis_tickangle=-35)
 st.plotly_chart(fig_cities, use_container_width=True)
+
+st.divider()
+
+# ── Row 5: Station Growth Over Time ───────────────────────────────────────────
+st.subheader("Recommended Charts — Preview")
+st.caption("Charts below are layout previews for recommended additions to the live Preset dashboard.")
+
+fig_growth = go.Figure()
+fig_growth.add_trace(go.Scatter(
+    x=timeseries["year"],
+    y=timeseries["cumulative_l2_only"],
+    mode="lines",
+    stackgroup="one",
+    name="L2 Only (cumulative)",
+    line=dict(color="#3B82F6"),
+    fillcolor="rgba(59,130,246,0.35)",
+))
+fig_growth.add_trace(go.Scatter(
+    x=timeseries["year"],
+    y=timeseries["cumulative_dc_fast"],
+    mode="lines",
+    stackgroup="one",
+    name="DC Fast Capable (cumulative)",
+    line=dict(color="#F59E0B"),
+    fillcolor="rgba(245,158,11,0.55)",
+))
+fig_growth.update_layout(
+    title="[Recommended] EV Station Growth Over Time — Cumulative by Charger Type",
+    xaxis_title="Year",
+    yaxis_title="Cumulative Stations",
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    height=420,
+    margin={"t": 60},
+)
+st.plotly_chart(fig_growth, use_container_width=True)
+
+st.divider()
+
+# ── Row 6: DC Fast % Penetration + Open Rate ──────────────────────────────────
+col_dc, col_open = st.columns(2)
+
+with col_dc:
+    df_dc = df.copy()
+    df_dc["dc_fast_pct"] = (df_dc["total_dc_fast_ports"] / df_dc["total_stations"] * 100).round(1)
+    dc_sorted = df_dc.sort_values("dc_fast_pct", ascending=True).tail(20)
+    fig_dc_pct = px.bar(
+        dc_sorted,
+        x="dc_fast_pct",
+        y="state",
+        orientation="h",
+        color="dc_fast_pct",
+        color_continuous_scale="YlOrRd",
+        title="[Recommended] DC Fast Penetration Rate — Top 20 States<br><sup>(% of stations with DC fast capability)</sup>",
+        labels={"dc_fast_pct": "DC Fast %", "state": "State"},
+        text="dc_fast_pct",
+    )
+    fig_dc_pct.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
+    fig_dc_pct.update_layout(coloraxis_showscale=False, height=540, margin={"t": 70})
+    st.plotly_chart(fig_dc_pct, use_container_width=True)
+
+with col_open:
+    df_open = df.copy()
+    df_open["open_rate"] = (df_open["open_stations"] / df_open["total_stations"] * 100).round(1)
+    open_sorted = df_open.sort_values("open_rate").head(20)
+    fig_open = px.bar(
+        open_sorted,
+        x="open_rate",
+        y="state",
+        orientation="h",
+        color="open_rate",
+        color_continuous_scale="RdYlGn",
+        title="[Recommended] Station Open Rate by State — Bottom 20<br><sup>(% of stations currently open — lower = reliability concern)</sup>",
+        labels={"open_rate": "Open Rate (%)", "state": "State"},
+        text="open_rate",
+    )
+    fig_open.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
+    fig_open.update_layout(coloraxis_showscale=False, height=540, margin={"t": 70})
+    st.plotly_chart(fig_open, use_container_width=True)
+
+st.divider()
+
+# ── Row 7: L2 Ports per 100k Choropleth ───────────────────────────────────────
+df_ports = df.copy()
+df_ports["level2_ports_per_100k"] = (df_ports["total_level2_ports"] / df_ports["population"] * 100_000).round(2)
+
+fig_ports_map = px.choropleth(
+    df_ports,
+    locations="state",
+    locationmode="USA-states",
+    color="level2_ports_per_100k",
+    scope="usa",
+    color_continuous_scale="Purples",
+    hover_name="state_name",
+    hover_data={
+        "state": False,
+        "total_level2_ports": True,
+        "level2_ports_per_100k": True,
+    },
+    labels={
+        "level2_ports_per_100k": "L2 Ports / 100k",
+        "total_level2_ports": "Total L2 Ports",
+    },
+    title="[Recommended] L2 Charging Port Density by State (Ports per 100k People) — Charging Capacity vs Access Points",
+)
+fig_ports_map.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0}, height=420)
+st.plotly_chart(fig_ports_map, use_container_width=True)
+
+st.divider()
+
+# ── Row 8: Regional Comparison ────────────────────────────────────────────────
+REGION_LABELS = {"NE": "Northeast", "SE": "Southeast", "MW": "Midwest", "SW": "Southwest", "W": "West"}
+regions["region_label"] = regions["region"].map(REGION_LABELS)
+
+col_r1, col_r2 = st.columns(2)
+
+with col_r1:
+    fig_reg_stations = px.bar(
+        regions,
+        x="region_label",
+        y="total_stations",
+        color="region_label",
+        color_discrete_sequence=px.colors.qualitative.Set2,
+        title="[Recommended] Total EV Stations by Region",
+        labels={"total_stations": "Total Stations", "region_label": "Region"},
+        text="total_stations",
+    )
+    fig_reg_stations.update_traces(texttemplate="%{text:,}", textposition="outside")
+    fig_reg_stations.update_layout(showlegend=False, height=400, margin={"t": 50})
+    st.plotly_chart(fig_reg_stations, use_container_width=True)
+
+with col_r2:
+    fig_reg_gap = px.bar(
+        regions,
+        x="region_label",
+        y="evs_per_station",
+        color="evs_per_station",
+        color_continuous_scale="RdYlGn_r",
+        title="[Recommended] Avg EVs per Station (Gap Score) by Region",
+        labels={"evs_per_station": "EVs per Station", "region_label": "Region"},
+        text="evs_per_station",
+    )
+    fig_reg_gap.update_traces(texttemplate="%{text:.1f}", textposition="outside")
+    fig_reg_gap.update_layout(coloraxis_showscale=False, height=400, margin={"t": 50},
+                               xaxis={"categoryorder": "total descending"})
+    st.plotly_chart(fig_reg_gap, use_container_width=True)

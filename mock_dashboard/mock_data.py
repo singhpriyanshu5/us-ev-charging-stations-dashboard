@@ -104,6 +104,66 @@ def get_state_data() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def get_timeseries_data() -> pd.DataFrame:
+    """
+    Simulate annual EV station openings and cumulative totals (2005–2024).
+    Mirrors the shape of fct_ev_stations_over_time from Snowflake.
+    Growth is modelled as exponential with a DC fast surge post-2018.
+    """
+    years = list(range(2005, 2025))
+    # Simulate realistic cumulative totals anchored to ~85k by 2024
+    cum_total = [200, 400, 750, 1400, 2700, 5000, 8500, 13000, 19000,
+                 27000, 37000, 48000, 60000, 70000, 76000, 80000, 83000, 85000, 85500, 85800]
+    # DC fast emerged seriously around 2012-2014; model its share growing over time
+    dc_fast_share = [0.04, 0.05, 0.06, 0.07, 0.09, 0.10, 0.12, 0.14, 0.15,
+                     0.16, 0.17, 0.18, 0.19, 0.20, 0.18, 0.16, 0.16, 0.17, 0.18, 0.183]
+
+    rows = []
+    prev = 0
+    for i, yr in enumerate(years):
+        noise = np.random.uniform(0.95, 1.05)
+        cum = int(cum_total[i] * noise)
+        new = max(0, cum - prev)
+        dc_share = dc_fast_share[i]
+        rows.append({
+            "year": yr,
+            "new_stations": new,
+            "new_dc_fast_stations": int(new * dc_share),
+            "new_l2_only_stations": int(new * (1 - dc_share)),
+            "cumulative_stations": cum,
+            "cumulative_dc_fast": int(cum * dc_share),
+            "cumulative_l2_only": int(cum * (1 - dc_share)),
+        })
+        prev = cum
+
+    return pd.DataFrame(rows)
+
+
+def get_region_data() -> pd.DataFrame:
+    """
+    Regional rollup — mirrors fct_ev_stations_by_region from Snowflake.
+    Aggregates the state mock data by region.
+    """
+    df = get_state_data()
+    region_map = {abbr: region for abbr, _, region in STATES}
+    df["region"] = df["state"].map(region_map)
+
+    grp = df.groupby("region").agg(
+        state_count=("state", "count"),
+        total_stations=("total_stations", "sum"),
+        stations_with_dc_fast=("total_dc_fast_ports", lambda x: (x > 0).sum()),
+        total_population=("population", "sum"),
+        total_ev_registrations=("ev_registrations", "sum"),
+    ).reset_index()
+
+    grp["dc_fast_pct"] = (grp["stations_with_dc_fast"] / grp["total_stations"] * 100).round(1)
+    grp["stations_per_100k"] = (grp["total_stations"] / grp["total_population"] * 100_000).round(2)
+    grp["ev_adoption_rate"] = (grp["total_ev_registrations"] / grp["total_population"] * 100_000).round(2)
+    grp["evs_per_station"] = (grp["total_ev_registrations"] / grp["total_stations"]).round(1)
+
+    return grp.sort_values("total_stations", ascending=False)
+
+
 def get_city_data() -> pd.DataFrame:
     cities = [
         ("Los Angeles",    "CA", 3800, 9500,  950),
