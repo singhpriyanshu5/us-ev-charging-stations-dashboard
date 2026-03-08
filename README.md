@@ -19,6 +19,10 @@ An end-to-end data engineering pipeline that ingests real US EV charging station
 - DC fast vs L2-only station breakdown
 - Infrastructure gap ranking — which states have the most EVs per charging station
 - EV adoption rate vs infrastructure density scatter
+- Station growth over time — cumulative L2 vs DC fast by year (2005–2024)
+- DC fast penetration rate by state — % of stations with fast-charging capability
+- L2 ports per station by state — hub-style vs single-port network design patterns
+- Regional breakdown — station counts and gap scores across 5 US regions
 
 ---
 
@@ -42,7 +46,7 @@ Snowflake (EV_ANALYTICS database)
 └── analytics.*     — dbt mart tables (aggregated, dashboard-ready)
 
 Preset.io
-└── 7 charts assembled into one dashboard (connected to analytics schema via dashboard_ro role)
+└── 9 charts assembled into one dashboard (connected to analytics schema via dashboard_ro role)
 ```
 
 ---
@@ -75,7 +79,9 @@ ev-charging-stations-dashboard/
 │   │       ├── fct_ev_stations_by_state.sql
 │   │       ├── fct_ev_stations_by_city.sql
 │   │       ├── fct_ev_density.sql
-│   │       └── fct_ev_adoption_vs_infrastructure.sql
+│   │       ├── fct_ev_adoption_vs_infrastructure.sql
+│   │       ├── fct_ev_stations_over_time.sql
+│   │       └── fct_ev_stations_by_region.sql
 │   └── seeds/
 │       └── dim_geography.csv
 ├── data/
@@ -87,7 +93,8 @@ ev-charging-stations-dashboard/
 │   └── mock_data.py
 └── agent_outputs/
     ├── PLAN.md
-    └── implementation_summary.md
+    ├── implementation_summary.md
+    └── chart_recommendations.md
 ```
 
 ---
@@ -147,7 +154,7 @@ Create a Snowflake connection in Preset with:
 - **Warehouse**: `COMPUTE_WH`
 - **Role**: `dashboard_ro`
 
-Add datasets: `fct_ev_stations_by_state`, `fct_ev_stations_by_city`, `fct_ev_density`, `fct_ev_adoption_vs_infrastructure`
+Add datasets: `fct_ev_stations_by_state`, `fct_ev_stations_by_city`, `fct_ev_density`, `fct_ev_adoption_vs_infrastructure`, `fct_ev_stations_over_time`, `fct_ev_stations_by_region`
 
 ---
 
@@ -169,4 +176,5 @@ Opens at http://localhost:8501
 
 - **NREL API**: The JSON endpoint caps at 200 records and ignores pagination params. The pipeline uses the CSV endpoint (`/v1.csv`) which returns all ~85k stations in one request.
 - **EV Registrations**: AFDC has no programmatic API. The 2024 data was manually sourced and saved to `data/ev_registrations_2024.csv`. Annual refresh requires manually updating this file.
-- **DC fast station count**: `ev_dc_fast_num` is null for ~82% of stations. The pipeline derives DC fast presence from `ev_connector_types` (99.98% complete) instead — see `stg_ev_stations.sql`.
+- **DC fast station count**: `ev_dc_fast_num` is null for ~82% of stations. The pipeline derives DC fast presence from `ev_connector_types` (99.98% complete) instead — see `stg_ev_stations.sql`. As a result, `total_dc_fast_ports` in the marts undercounts by ~35% of DC fast stations and should be treated as approximate; use `stations_with_dc_fast` for station-count metrics.
+- **Preset choropleth**: The ISO 3166-2 field requires full state codes in `US-XX` format. Use Custom SQL `CONCAT('US-', STATE)` rather than the bare `STATE` column.
