@@ -249,31 +249,36 @@ with col_open:
 
 st.divider()
 
-# ── Row 7: L2 Ports per 100k Choropleth ───────────────────────────────────────
-df_ports = df.copy()
-df_ports["level2_ports_per_100k"] = (df_ports["total_level2_ports"] / df_ports["population"] * 100_000).round(2)
+# ── Row 7: L2 Ports per Station ───────────────────────────────────────────────
+df_pps = df.copy()
+df_pps["l2_ports_per_station"] = (df_pps["total_level2_ports"] / df_pps["total_stations"]).round(1)
+pps_sorted = df_pps.sort_values("l2_ports_per_station", ascending=True)
 
-fig_ports_map = px.choropleth(
-    df_ports,
-    locations="state",
-    locationmode="USA-states",
-    color="level2_ports_per_100k",
-    scope="usa",
-    color_continuous_scale="Purples",
+fig_pps = px.bar(
+    pps_sorted,
+    x="l2_ports_per_station",
+    y="state",
+    orientation="h",
+    color="l2_ports_per_station",
+    color_continuous_scale="Blues",
     hover_name="state_name",
     hover_data={
         "state": False,
         "total_level2_ports": True,
-        "level2_ports_per_100k": True,
+        "total_stations": True,
+        "l2_ports_per_station": True,
     },
     labels={
-        "level2_ports_per_100k": "L2 Ports / 100k",
+        "l2_ports_per_station": "L2 Ports / Station",
         "total_level2_ports": "Total L2 Ports",
+        "total_stations": "Total Stations",
     },
-    title="[Recommended] L2 Charging Port Density by State (Ports per 100k People) — Charging Capacity vs Access Points",
+    title="[Recommended] L2 Ports per Station by State — Charging Hub Density<br><sup>(higher = more multi-port hubs; lower = mostly single-port stations)</sup>",
+    text="l2_ports_per_station",
 )
-fig_ports_map.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0}, height=420)
-st.plotly_chart(fig_ports_map, use_container_width=True)
+fig_pps.update_traces(texttemplate="%{text:.1f}", textposition="outside")
+fig_pps.update_layout(coloraxis_showscale=False, height=1100, margin={"t": 70})
+st.plotly_chart(fig_pps, use_container_width=True)
 
 st.divider()
 

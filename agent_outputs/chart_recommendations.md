@@ -63,22 +63,22 @@
 
 ---
 
-### 3. L2 Charging Port Density by State — Choropleth Map
+### 3. L2 Ports per Station by State — Horizontal Bar Chart
 
-**Why it's valuable**: The existing density map uses *stations per 100k* — but a station can have 1 port or 20 ports. Port density (L2 ports per 100k people) measures actual charging *capacity*, not just the number of access points. A second map using `level2_ports_per_100k` reveals very different geographic patterns — states with large multi-port charging hubs (like shopping-centre deployments) stand out.
+**Why it's valuable**: Both the existing density map and a ports-per-100k map answer the same geographic question — "which states have more infrastructure?" This chart asks a different question: *how concentrated is that infrastructure?* A high `l2_ports_per_station` ratio means a state's charging network is built around large multi-port hubs (e.g. shopping-centre deployments), while a low ratio means mostly single-port kerbside chargers. This reveals network *design patterns*, not just volume, and flags states where adding ports at existing stations would be more efficient than building new ones.
 
-**Chart type**: Choropleth (USA Map)
-**Metric**: `level2_ports_per_100k` (already computed in `fct_ev_density`)
-**Color scale**: Purples (to distinguish visually from the existing blue density map)
+**Chart type**: Horizontal Bar (all states, sorted ascending)
+**Metric**: `total_level2_ports / total_stations` (custom SQL)
+**Color scale**: Blues
 
-**Dataset**: `fct_ev_density` (no new model needed — column already exists)
+**Dataset**: `fct_ev_stations_by_state` (no new model needed)
 
 **Preset implementation**:
-1. Add a second chart using the existing `fct_ev_density` dataset
-2. Create chart → type: **USA Map**
-3. ISO 3166-2 column: Custom SQL → `CONCAT('US-', STATE)`
-4. Metric: `AVG(LEVEL2_PORTS_PER_100K)`
-5. Color scale: choose a contrasting palette (e.g. Purples)
+1. Open dataset `fct_ev_stations_by_state`
+2. Create chart → type: **Bar Chart**
+3. Dimension: `state`; Metric: Custom SQL → `SUM(TOTAL_LEVEL2_PORTS) / SUM(TOTAL_STATIONS)`
+4. Label as "L2 Ports per Station"; sort ascending
+5. Show all states for full picture, or filter to top/bottom 20 for focused view
 
 ---
 
@@ -127,7 +127,7 @@
 |---|---|---|---|---|
 | 1 | Station Growth Over Time | `fct_ev_stations_over_time` ✅ | New | Medium |
 | 2 | DC Fast Penetration % by State | None | `fct_ev_stations_by_state` | Low |
-| 3 | L2 Port Density Map | None | `fct_ev_density` | Low |
+| 3 | L2 Ports per Station by State | None | `fct_ev_stations_by_state` | Low |
 | 4 | Station Open Rate by State | None | `fct_ev_stations_by_state` | Low |
 | 5 | Regional Breakdown | `fct_ev_stations_by_region` ✅ | New | Medium |
 
