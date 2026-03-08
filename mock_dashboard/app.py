@@ -172,9 +172,6 @@ st.plotly_chart(fig_cities, use_container_width=True)
 st.divider()
 
 # ── Row 5: Station Growth Over Time ───────────────────────────────────────────
-st.subheader("Recommended Charts — Preview")
-st.caption("Charts below are layout previews for recommended additions to the live Preset dashboard.")
-
 fig_growth = go.Figure()
 fig_growth.add_trace(go.Scatter(
     x=timeseries["year"],
@@ -195,7 +192,7 @@ fig_growth.add_trace(go.Scatter(
     fillcolor="rgba(245,158,11,0.55)",
 ))
 fig_growth.update_layout(
-    title="[Recommended] EV Station Growth Over Time — Cumulative by Charger Type",
+    title="EV Station Growth Over Time — Cumulative by Charger Type",
     xaxis_title="Year",
     yaxis_title="Cumulative Stations",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
@@ -217,7 +214,7 @@ fig_dc_pct = px.bar(
     orientation="h",
     color="dc_fast_pct",
     color_continuous_scale="YlOrRd",
-    title="[Recommended] DC Fast Penetration Rate — Top 20 States<br><sup>(% of stations with DC fast capability)</sup>",
+    title="DC Fast Penetration Rate — Top 20 States<br><sup>(% of stations with DC fast capability)</sup>",
     labels={"dc_fast_pct": "DC Fast %", "state": "State"},
     text="dc_fast_pct",
 )
@@ -251,7 +248,7 @@ fig_pps = px.bar(
         "total_level2_ports": "Total L2 Ports",
         "total_stations": "Total Stations",
     },
-    title="[Recommended] L2 Ports per Station by State — Charging Hub Density<br><sup>(higher = more multi-port hubs; lower = mostly single-port stations)</sup>",
+    title="L2 Ports per Station by State — Charging Hub Density<br><sup>(higher = more multi-port hubs; lower = mostly single-port stations)</sup>",
     text="l2_ports_per_station",
 )
 fig_pps.update_traces(texttemplate="%{text:.1f}", textposition="outside")
@@ -273,7 +270,7 @@ with col_r1:
         y="total_stations",
         color="region_label",
         color_discrete_sequence=px.colors.qualitative.Set2,
-        title="[Recommended] Total EV Stations by Region",
+        title="Total EV Stations by Region",
         labels={"total_stations": "Total Stations", "region_label": "Region"},
         text="total_stations",
     )
@@ -288,7 +285,7 @@ with col_r2:
         y="evs_per_station",
         color="evs_per_station",
         color_continuous_scale="RdYlGn_r",
-        title="[Recommended] Avg EVs per Station (Gap Score) by Region",
+        title="Avg EVs per Station (Gap Score) by Region",
         labels={"evs_per_station": "EVs per Station", "region_label": "Region"},
         text="evs_per_station",
     )
