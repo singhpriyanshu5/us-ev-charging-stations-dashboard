@@ -6,6 +6,12 @@ An end-to-end data engineering pipeline that ingests real US EV charging station
 
 ---
 
+## Dashboard Preview
+
+[View full dashboard screenshots (PDF)](./docs/EV_Charging_Infrastructure_Adoption_Dashboard.pdf)
+
+---
+
 ## Dashboard Insights
 
 - EV station density by state (stations per 100k people)
