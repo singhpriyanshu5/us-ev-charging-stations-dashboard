@@ -82,23 +82,11 @@
 
 ---
 
-### 4. Station Open Rate by State — Horizontal Bar Chart
+### 4. Station Open Rate by State — ~~Horizontal Bar Chart~~ DROPPED
 
-**Why it's valuable**: All other charts measure *quantity* — this is the only **quality/reliability** metric. `open_stations / total_stations * 100` shows what percentage of stations are currently operational. States with low open rates (many "Temp Unavailable" stations) signal reliability problems, poor maintenance, or stale NREL data. A national average below ~90% is a red flag worth surfacing.
+**Original intent**: Surface states with low open rates as a reliability signal.
 
-**Chart type**: Horizontal Bar
-**Metric**: `open_stations / total_stations * 100` (custom SQL)
-**Sort**: Ascending (worst states first)
-**Color**: Red–Yellow–Green diverging scale (green = reliable)
-
-**Dataset**: `fct_ev_stations_by_state` (no new model needed)
-
-**Preset implementation**:
-1. Open dataset `fct_ev_stations_by_state`
-2. Create chart → type: **Bar Chart**
-3. Dimension: `state`; Metric: Custom SQL → `SUM(OPEN_STATIONS) / SUM(TOTAL_STATIONS) * 100`
-4. Sort ascending (worst first); limit to bottom 20 or all 52 states
-5. Add a reference line at 95% to mark a "healthy" threshold
+**Why dropped**: Built and evaluated against real NREL data — all 52 states/territories show ~98% open rate with less than 0.1% spread between the best and worst states. No meaningful variation exists to visualise. Likely causes: NREL "Temporarily Unavailable" status is inconsistently updated by operators, and state-level aggregation washes out individual station reliability issues. Chart was not added to the Preset dashboard.
 
 ---
 
@@ -128,11 +116,12 @@
 | 1 | Station Growth Over Time | `fct_ev_stations_over_time` ✅ | New | Medium |
 | 2 | DC Fast Penetration % by State | None | `fct_ev_stations_by_state` | Low |
 | 3 | L2 Ports per Station by State | None | `fct_ev_stations_by_state` | Low |
-| 4 | Station Open Rate by State | None | `fct_ev_stations_by_state` | Low |
+| 4 | ~~Station Open Rate by State~~ | None | `fct_ev_stations_by_state` | Dropped — no variation in real data (~98% across all states) |
 | 5 | Regional Breakdown | `fct_ev_stations_by_region` ✅ | New | Medium |
 
-**Charts 2, 3, 4** can be added in Preset immediately — all data already exists in current marts.
-**Charts 1 and 5** require running `dbt run` first to materialise the two new mart tables.
+**Charts 2 and 3** can be added in Preset immediately — all data already exists in current marts.
+**Charts 1 and 5** required running `dbt run` first to materialise the two new mart tables.
+**Chart 4** was dropped after evaluation — see above.
 
 ---
 

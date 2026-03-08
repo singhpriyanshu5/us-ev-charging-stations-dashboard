@@ -206,46 +206,24 @@ st.plotly_chart(fig_growth, use_container_width=True)
 
 st.divider()
 
-# ── Row 6: DC Fast % Penetration + Open Rate ──────────────────────────────────
-col_dc, col_open = st.columns(2)
-
-with col_dc:
-    df_dc = df.copy()
-    df_dc["dc_fast_pct"] = (df_dc["stations_with_dc_fast"] / df_dc["total_stations"] * 100).round(1)
-    dc_sorted = df_dc.sort_values("dc_fast_pct", ascending=True).tail(20)
-    fig_dc_pct = px.bar(
-        dc_sorted,
-        x="dc_fast_pct",
-        y="state",
-        orientation="h",
-        color="dc_fast_pct",
-        color_continuous_scale="YlOrRd",
-        title="[Recommended] DC Fast Penetration Rate — Top 20 States<br><sup>(% of stations with DC fast capability)</sup>",
-        labels={"dc_fast_pct": "DC Fast %", "state": "State"},
-        text="dc_fast_pct",
-    )
-    fig_dc_pct.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
-    fig_dc_pct.update_layout(coloraxis_showscale=False, height=540, margin={"t": 70})
-    st.plotly_chart(fig_dc_pct, use_container_width=True)
-
-with col_open:
-    df_open = df.copy()
-    df_open["open_rate"] = (df_open["open_stations"] / df_open["total_stations"] * 100).round(1)
-    open_sorted = df_open.sort_values("open_rate").head(20)
-    fig_open = px.bar(
-        open_sorted,
-        x="open_rate",
-        y="state",
-        orientation="h",
-        color="open_rate",
-        color_continuous_scale="RdYlGn",
-        title="[Recommended] Station Open Rate by State — Bottom 20<br><sup>(% of stations currently open — lower = reliability concern)</sup>",
-        labels={"open_rate": "Open Rate (%)", "state": "State"},
-        text="open_rate",
-    )
-    fig_open.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
-    fig_open.update_layout(coloraxis_showscale=False, height=540, margin={"t": 70})
-    st.plotly_chart(fig_open, use_container_width=True)
+# ── Row 6: DC Fast % Penetration ──────────────────────────────────────────────
+df_dc = df.copy()
+df_dc["dc_fast_pct"] = (df_dc["stations_with_dc_fast"] / df_dc["total_stations"] * 100).round(1)
+dc_sorted = df_dc.sort_values("dc_fast_pct", ascending=True).tail(20)
+fig_dc_pct = px.bar(
+    dc_sorted,
+    x="dc_fast_pct",
+    y="state",
+    orientation="h",
+    color="dc_fast_pct",
+    color_continuous_scale="YlOrRd",
+    title="[Recommended] DC Fast Penetration Rate — Top 20 States<br><sup>(% of stations with DC fast capability)</sup>",
+    labels={"dc_fast_pct": "DC Fast %", "state": "State"},
+    text="dc_fast_pct",
+)
+fig_dc_pct.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
+fig_dc_pct.update_layout(coloraxis_showscale=False, height=540, margin={"t": 70})
+st.plotly_chart(fig_dc_pct, use_container_width=True)
 
 st.divider()
 
