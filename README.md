@@ -8,7 +8,9 @@ An end-to-end data engineering pipeline that ingests real US EV charging station
 
 ## Dashboard Preview
 
-[View full dashboard screenshots (PDF)](./docs/EV_Charging_Infrastructure_Adoption_Dashboard.pdf)
+![EV Charging Infrastructure & Adoption Dashboard](./EV_Charging_Infrastructure_Adoption_Dashboard_v2_image.png)
+
+[View full dashboard (PDF)](./EV_Charging_Infrastructure_Adoption_Dashboard_v2.pdf)
 
 ---
 
