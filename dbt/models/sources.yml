@@ -1,0 +1,40 @@
+version: 2
+
+sources:
+  - name: raw
+    database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
+    schema: raw
+    tables:
+      - name: ev_stations
+        description: "Daily snapshot from NREL Alternative Fuels Station API. Full replace on each load."
+        columns:
+          - name: station_id
+            description: "Natural key from NREL source system"
+          - name: status_code
+            description: "E=Open, P=Planned, T=Temporarily Unavailable"
+          - name: ev_connector_types
+            description: "JSON array of connector types. 99.98% complete — preferred over ev_dc_fast_num for DC fast presence."
+          - name: ev_dc_fast_num
+            description: "DC fast port count. 82.2% null — use has_dc_fast flag derived from ev_connector_types instead."
+          - name: _ingested_at
+            description: "Timestamp when this row was loaded by Airflow DAG"
+
+      - name: ev_registrations
+        description: "2024 state EV registration counts. Loaded from AFDC CSV (no programmatic API). Annual manual refresh."
+        columns:
+          - name: state
+            description: "2-letter state abbreviation"
+          - name: ev_count
+            description: "Total EVs registered (BEV + PHEV combined, vehicle_type=ALL)"
+          - name: year
+            description: "Registration year"
+
+      - name: census_population
+        description: "US Census ACS5 state population estimates. Annual pull via Census API."
+        columns:
+          - name: state_fips
+            description: "2-digit FIPS code (zero-padded)"
+          - name: population
+            description: "ACS5 5-year population estimate"
+          - name: year
+            description: "ACS5 vintage year (e.g., 2022)"

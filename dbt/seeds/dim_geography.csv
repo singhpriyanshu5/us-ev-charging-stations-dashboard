@@ -1,0 +1,52 @@
+state,state_name,state_fips,region,area_sq_miles
+AL,Alabama,01,SE,52420
+AK,Alaska,02,W,663268
+AZ,Arizona,04,SW,113990
+AR,Arkansas,05,SE,53179
+CA,California,06,W,163696
+CO,Colorado,08,W,104094
+CT,Connecticut,09,NE,5543
+DE,Delaware,10,SE,2489
+DC,District of Columbia,11,NE,68
+FL,Florida,12,SE,65758
+GA,Georgia,13,SE,59425
+HI,Hawaii,15,W,10932
+ID,Idaho,16,W,83569
+IL,Illinois,17,MW,57914
+IN,Indiana,18,MW,36420
+IA,Iowa,19,MW,56273
+KS,Kansas,20,MW,82278
+KY,Kentucky,21,SE,40408
+LA,Louisiana,22,SE,51843
+ME,Maine,23,NE,35380
+MD,Maryland,24,SE,12407
+MA,Massachusetts,25,NE,10554
+MI,Michigan,26,MW,96714
+MN,Minnesota,27,MW,86936
+MS,Mississippi,28,SE,48432
+MO,Missouri,29,MW,69707
+MT,Montana,30,W,147040
+NE,Nebraska,31,MW,77358
+NV,Nevada,32,W,110572
+NH,New Hampshire,33,NE,9349
+NJ,New Jersey,34,NE,8723
+NM,New Mexico,35,SW,121590
+NY,New York,36,NE,54555
+NC,North Carolina,37,SE,53819
+ND,North Dakota,38,MW,70698
+OH,Ohio,39,MW,44826
+OK,Oklahoma,40,SW,69899
+OR,Oregon,41,W,98379
+PA,Pennsylvania,42,NE,46054
+RI,Rhode Island,44,NE,1545
+SC,South Carolina,45,SE,32020
+SD,South Dakota,46,MW,77116
+TN,Tennessee,47,SE,42144
+TX,Texas,48,SW,268596
+UT,Utah,49,W,84897
+VT,Vermont,50,NE,9616
+VA,Virginia,51,SE,42775
+WA,Washington,53,W,71298
+WV,West Virginia,54,SE,24230
+WI,Wisconsin,55,MW,65496
+WY,Wyoming,56,W,97813

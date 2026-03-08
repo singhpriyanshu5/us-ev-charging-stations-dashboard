@@ -3,3 +3,12 @@ __pycache__/
 *.pyo
 .env
 .DS_Store
+
+# Airflow logs
+airflow/logs/
+
+# dbt generated files
+dbt/target/
+dbt/logs/
+dbt/.user.yml
+dbt/dbt_packages/

@@ -23,18 +23,45 @@ adoption (registrations). The tech stack is Snowflake + Airflow + dbt + Preset.i
   — use this in the DAG to skip a full pull on days when data hasn't changed.
 - **Role**: Real-time source — pulled daily by Airflow. Captures current station inventory.
 
+**Validated 2026-03-07 (live API call — 85,664 stations cross-tabulated):**
+- Total US EV stations: **85,664** across all 50 states + DC + PR
+- Open (`status_code='E'`): 83,669 (97.7%) | Planned (`status_code='P'`): 401 (0.5%) | Temp unavailable: 1,595
+- `ev_level2_evse_num` null rate: **16.5%** — usable; treat null as 0 for aggregation
+- `ev_dc_fast_num` null rate: **82.2%** — but cross-referencing with `ev_connector_types` reveals:
+  - 92.1% of null-DCF stations have only L2 connector types → NULL legitimately means "no DC fast charger"
+  - 7.8% of null-DCF stations (5,518) have a DC fast connector type (CCS/CHAdeMO/TESLA) listed → real undercount
+  - **`ev_connector_types` is 99.98% complete** (only 19 null across 85,664 stations) — use this field
+    to derive DC fast presence, not `ev_dc_fast_num`. See `stg_ev_stations.sql` for implementation.
+  - Using `ev_connector_types` captures all ~15,703 DC fast stations vs ~10,185 from `ev_dc_fast_num` alone.
+  - Port counts (`SUM(ev_dc_fast_num)`) still undercount by ~35% of DC fast stations; use with caveat.
+- `planned_stations` count is near-zero in real data (401 US-wide). Drop this as a dashboard metric.
+
 ### Source B: DOE/AFDC State EV Registration Data (Historical Archive)
-- **URL**: https://afdc.energy.gov/vehicle-registration (downloadable CSVs by year)
-- **Alternative**: Atlas EV Hub state registration API or Kaggle `ev-registration-counts-by-state` dataset
+- **URL**: https://afdc.energy.gov/vehicle-registration (web page, data sourced from Experian)
+- **Alternative**: Atlas EV Hub CSVs (11 states only, zip/county level — insufficient for full 50-state coverage)
 - **Key fields**: `state`, `year`, `ev_count`, `vehicle_type` (BEV/PHEV)
 - **Role**: Historical archive source — one-time bulk load, then annual refresh.
   Covers 2016–2024 EV registrations by state.
+
+**Validated 2026-03-07 (live check):**
+- **No programmatic API or direct CSV download URL exists.** The AFDC page displays data but offers
+  no machine-readable endpoint. The NREL developer portal does not include an EV registrations API.
+- 2024 data is current and complete on the page. Confirmed values:
+  CA: 1,533,900 | FL: 334,800 | TX: 294,700 | WA: 191,400 | NY: 168,100 | US Total: 4,503,700 EVs
+- **Required approach**: Manual one-time download — copy the state registration table from the AFDC
+  page, save as `data/ev_registrations_2024.csv`, and load it as a dbt seed file. Annual refresh
+  follows the same manual process. Do NOT design DAG 2 as a URL-based automated download.
 
 ### Source C: US Census Bureau API (Population — for density)
 - **URL**: `https://api.census.gov/data/{year}/acs/acs5?get=NAME,B01003_001E&for=state:*`
 - **Auth**: No key required for basic use
 - **Key fields**: `state_name`, `state_fips`, `population`
 - **Role**: Annual pull used to compute stations-per-capita and EVs-per-capita metrics.
+
+**Validated 2026-03-07 (live API call):**
+- Returns 52 rows (50 states + DC + Puerto Rico). Filter out PR (fips=72) if US-only dashboard.
+- 2022 ACS5 is the latest confirmed available year. Use `year=2022` until 2023 estimates publish.
+- Sample: CA 39,356,104 | TX 29,243,342 | FL 21,634,529 | NY 19,994,379 | US sum: 334,369,975
 
 ---
 
@@ -154,7 +181,8 @@ ev-charging-stations-dashboard/
 ### DAG 2: `dag_ev_registrations_historical.py` (archive source)
 - **Schedule**: `@once` (then `@yearly` for annual refresh)
 - **Steps**:
-  1. `PythonOperator` → download CSV files for years 2016–2024 from AFDC or S3 bucket
+  1. `PythonOperator` → read from local seed file `data/ev_registrations_2024.csv`
+     (no URL download — AFDC has no programmatic API; file must be manually prepared; see Source B notes)
   2. Parse and normalize: state abbreviation, year, ev_count, vehicle_type
   3. `SnowflakeOperator` → load via `COPY INTO` or `executemany`
 
@@ -192,7 +220,18 @@ SELECT
     longitude,
     COALESCE(ev_level1_evse_num, 0) AS level1_ports,
     COALESCE(ev_level2_evse_num, 0) AS level2_ports,
+    -- ev_dc_fast_num is null for ~82% of stations, but 92% of those are genuinely L2-only.
+    -- COALESCE to 0 is correct for the majority; the ~7.8% real undercount is handled via has_dc_fast below.
     COALESCE(ev_dc_fast_num, 0)     AS dc_fast_ports,
+    -- has_dc_fast: derived from ev_connector_types (99.98% complete) — the reliable DC fast signal.
+    -- Captures all ~15,703 DC fast stations vs ~10,185 reachable via ev_dc_fast_num alone.
+    CASE
+        WHEN ARRAY_CONTAINS('CCS'::VARIANT,     ev_connector_types)
+          OR ARRAY_CONTAINS('CHADEMO'::VARIANT,  ev_connector_types)
+          OR ARRAY_CONTAINS('TESLA'::VARIANT,    ev_connector_types)
+          OR ARRAY_CONTAINS('J3400'::VARIANT,    ev_connector_types)
+        THEN TRUE ELSE FALSE
+    END                             AS has_dc_fast,
     CASE status_code
         WHEN 'E' THEN 'Open'
         WHEN 'P' THEN 'Planned'
@@ -218,10 +257,15 @@ SELECT
     state,
     COUNT(*)                                                 AS total_stations,
     SUM(level2_ports)                                        AS total_level2_ports,
-    SUM(dc_fast_ports)                                       AS total_dc_fast_ports,
-    SUM(level1_ports + level2_ports + dc_fast_ports)         AS total_ports,
+    -- Use has_dc_fast (derived from ev_connector_types, 99.98% complete) for station counts.
+    -- This captures all ~15,703 DC fast stations, including the 5,518 where ev_dc_fast_num is null.
+    COUNT_IF(has_dc_fast)                                    AS stations_with_dc_fast,
+    -- dc_fast_ports (from ev_dc_fast_num) undercounts by ~35% of DC fast stations; use with caveat.
+    SUM(dc_fast_ports)                                       AS total_dc_fast_ports_partial,
     COUNT_IF(status = 'Open')                                AS open_stations,
+    -- planned_stations near-zero in real data (401 US-wide); kept for completeness
     COUNT_IF(status = 'Planned')                             AS planned_stations,
+    COUNT_IF(status = 'Other')                               AS temp_unavailable_stations,
     MIN(open_date)                                           AS first_station_date
 FROM {{ ref('stg_ev_stations') }}
 GROUP BY state
@@ -257,7 +301,7 @@ Connect Preset.io to Snowflake `ANALYTICS` schema using the `dashboard_ro` role.
 | Top 20 Cities | Bar | `fct_ev_stations_by_city` | City-level concentration |
 | EV Adoption vs Infrastructure | Scatter Plot | `fct_ev_adoption_vs_infrastructure` | X=ev_count, Y=total_stations, color=gap_score |
 | Infrastructure Gap Ranking | Bar | `fct_ev_adoption_vs_infrastructure` | States by evs_per_station descending |
-| Port Type Breakdown | Stacked Bar | `fct_ev_stations_by_state` | Level2 vs DC Fast per state |
+| Port Type Breakdown | Stacked Bar | `fct_ev_stations_by_state` | L2-only stations vs DC fast-capable stations — use `stations_with_dc_fast` (from `ev_connector_types`, 99.98% complete) not `ev_dc_fast_num` (82% null) |
 | KPI Header | Big Number tiles | All marts | Total US stations, total EVs, gap count |
 
 ---

@@ -1,0 +1,27 @@
+name: 'ev_charging'
+version: '1.0.0'
+config-version: 2
+
+profile: 'ev_charging'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+seeds:
+  ev_charging:
+    +schema: raw         # seeds land in the raw schema
+    +quote_columns: false
+
+models:
+  ev_charging:
+    staging:
+      +materialized: view
+      +schema: curated
+    marts:
+      +materialized: table
+      +schema: analytics
