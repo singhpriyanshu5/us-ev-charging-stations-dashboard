@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charging Infrastructure & Adoption Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <h1>EV Charging Infrastructure & Adoption Dashboard</h1>
+        <p class="subtitle">United States — Live data from NREL, US Census & DOE</p>
+    </header>
+
+    <main class="dashboard-container">
+
+        <!-- KPI Tiles -->
+        <section class="kpi-row" id="kpi-section">
+            <div class="kpi-card" id="kpi-stations">
+                <span class="kpi-label">Total EV Stations (US)</span>
+                <span class="kpi-value">—</span>
+            </div>
+            <div class="kpi-card" id="kpi-evs">
+                <span class="kpi-label">Total EV Registrations</span>
+                <span class="kpi-value">—</span>
+            </div>
+            <div class="kpi-card" id="kpi-gap">
+                <span class="kpi-label">Avg EVs per Station (Gap Score)</span>
+                <span class="kpi-value">—</span>
+            </div>
+        </section>
+
+        <!-- Section: Overview -->
+        <section class="section">
+            <h2 class="section-title">Overview</h2>
+
+            <!-- Choropleth Map -->
+            <div class="chart-card full-width">
+                <div id="chart-choropleth" class="chart-container"></div>
+            </div>
+
+            <!-- Top 15 States + DC Fast vs L2 -->
+            <div class="chart-grid two-col">
+                <div class="chart-card">
+                    <div id="chart-top15-states" class="chart-container"></div>
+                </div>
+                <div class="chart-card">
+                    <div id="chart-dcfast-vs-l2" class="chart-container"></div>
+                </div>
+            </div>
+
+            <!-- Top 20 Cities -->
+            <div class="chart-card full-width">
+                <div id="chart-top20-cities" class="chart-container"></div>
+            </div>
+
+            <!-- Station Growth Over Time -->
+            <div class="chart-card full-width">
+                <div id="chart-growth" class="chart-container"></div>
+            </div>
+        </section>
+
+        <!-- Section: EV Adoption & Infrastructure Metrics -->
+        <section class="section">
+            <h2 class="section-title">EV Adoption and Infrastructure Metrics</h2>
+
+            <!-- Scatter + Gap Ranking -->
+            <div class="chart-grid two-col">
+                <div class="chart-card">
+                    <div id="chart-adoption-scatter" class="chart-container"></div>
+                </div>
+                <div class="chart-card">
+                    <div id="chart-gap-ranking" class="chart-container"></div>
+                </div>
+            </div>
+
+            <!-- DC Fast Penetration + L2 Ports per Station -->
+            <div class="chart-grid two-col">
+                <div class="chart-card">
+                    <div id="chart-dcfast-pct" class="chart-container"></div>
+                </div>
+                <div class="chart-card">
+                    <div id="chart-l2-per-station" class="chart-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Regional Breakdowns -->
+        <section class="section">
+            <h2 class="section-title">Regional Breakdowns</h2>
+
+            <div class="chart-grid two-col">
+                <div class="chart-card">
+                    <div id="chart-regional-stations" class="chart-container"></div>
+                </div>
+                <div class="chart-card">
+                    <div id="chart-regional-gap" class="chart-container"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="dashboard-footer">
+        <p>Data sources: NREL AFDC API, US Census ACS5, DOE EV Registration Data</p>
+    </footer>
+
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

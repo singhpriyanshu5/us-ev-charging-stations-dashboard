@@ -1,0 +1,227 @@
+[
+  {
+    "state": "CA",
+    "city": "LOS ANGELES",
+    "total_stations": 2021,
+    "open_stations": 1979,
+    "total_level2_ports": 9096,
+    "stations_with_dc_fast": 139,
+    "total_dc_fast_ports_partial": 530
+  },
+  {
+    "state": "CA",
+    "city": "SAN DIEGO",
+    "total_stations": 992,
+    "open_stations": 977,
+    "total_level2_ports": 2770,
+    "stations_with_dc_fast": 112,
+    "total_dc_fast_ports_partial": 652
+  },
+  {
+    "state": "CA",
+    "city": "IRVINE",
+    "total_stations": 790,
+    "open_stations": 788,
+    "total_level2_ports": 1733,
+    "stations_with_dc_fast": 27,
+    "total_dc_fast_ports_partial": 155
+  },
+  {
+    "state": "GA",
+    "city": "ATLANTA",
+    "total_stations": 776,
+    "open_stations": 765,
+    "total_level2_ports": 2459,
+    "stations_with_dc_fast": 71,
+    "total_dc_fast_ports_partial": 176
+  },
+  {
+    "state": "MA",
+    "city": "BOSTON",
+    "total_stations": 756,
+    "open_stations": 748,
+    "total_level2_ports": 1857,
+    "stations_with_dc_fast": 50,
+    "total_dc_fast_ports_partial": 83
+  },
+  {
+    "state": "WA",
+    "city": "SEATTLE",
+    "total_stations": 733,
+    "open_stations": 722,
+    "total_level2_ports": 1799,
+    "stations_with_dc_fast": 68,
+    "total_dc_fast_ports_partial": 152
+  },
+  {
+    "state": "TX",
+    "city": "AUSTIN",
+    "total_stations": 716,
+    "open_stations": 704,
+    "total_level2_ports": 1543,
+    "stations_with_dc_fast": 93,
+    "total_dc_fast_ports_partial": 273
+  },
+  {
+    "state": "CA",
+    "city": "SAN JOSE",
+    "total_stations": 683,
+    "open_stations": 675,
+    "total_level2_ports": 2289,
+    "stations_with_dc_fast": 62,
+    "total_dc_fast_ports_partial": 544
+  },
+  {
+    "state": "CA",
+    "city": "SAN FRANCISCO",
+    "total_stations": 682,
+    "open_stations": 670,
+    "total_level2_ports": 1612,
+    "stations_with_dc_fast": 98,
+    "total_dc_fast_ports_partial": 282
+  },
+  {
+    "state": "CA",
+    "city": "SACRAMENTO",
+    "total_stations": 496,
+    "open_stations": 481,
+    "total_level2_ports": 1484,
+    "stations_with_dc_fast": 41,
+    "total_dc_fast_ports_partial": 500
+  },
+  {
+    "state": "MO",
+    "city": "KANSAS CITY",
+    "total_stations": 474,
+    "open_stations": 469,
+    "total_level2_ports": 911,
+    "stations_with_dc_fast": 7,
+    "total_dc_fast_ports_partial": 31
+  },
+  {
+    "state": "CO",
+    "city": "DENVER",
+    "total_stations": 469,
+    "open_stations": 457,
+    "total_level2_ports": 1443,
+    "stations_with_dc_fast": 55,
+    "total_dc_fast_ports_partial": 197
+  },
+  {
+    "state": "NY",
+    "city": "NEW YORK",
+    "total_stations": 464,
+    "open_stations": 441,
+    "total_level2_ports": 2043,
+    "stations_with_dc_fast": 255,
+    "total_dc_fast_ports_partial": 75
+  },
+  {
+    "state": "TX",
+    "city": "HOUSTON",
+    "total_stations": 437,
+    "open_stations": 423,
+    "total_level2_ports": 1041,
+    "stations_with_dc_fast": 85,
+    "total_dc_fast_ports_partial": 538
+  },
+  {
+    "state": "DC",
+    "city": "WASHINGTON",
+    "total_stations": 410,
+    "open_stations": 397,
+    "total_level2_ports": 1327,
+    "stations_with_dc_fast": 52,
+    "total_dc_fast_ports_partial": 61
+  },
+  {
+    "state": "FL",
+    "city": "MIAMI",
+    "total_stations": 399,
+    "open_stations": 390,
+    "total_level2_ports": 1193,
+    "stations_with_dc_fast": 53,
+    "total_dc_fast_ports_partial": 199
+  },
+  {
+    "state": "CA",
+    "city": "SANTA CLARA",
+    "total_stations": 383,
+    "open_stations": 381,
+    "total_level2_ports": 907,
+    "stations_with_dc_fast": 13,
+    "total_dc_fast_ports_partial": 52
+  },
+  {
+    "state": "AZ",
+    "city": "PHOENIX",
+    "total_stations": 379,
+    "open_stations": 366,
+    "total_level2_ports": 812,
+    "stations_with_dc_fast": 37,
+    "total_dc_fast_ports_partial": 175
+  },
+  {
+    "state": "TN",
+    "city": "NASHVILLE",
+    "total_stations": 358,
+    "open_stations": 353,
+    "total_level2_ports": 769,
+    "stations_with_dc_fast": 27,
+    "total_dc_fast_ports_partial": 150
+  },
+  {
+    "state": "OH",
+    "city": "COLUMBUS",
+    "total_stations": 357,
+    "open_stations": 348,
+    "total_level2_ports": 788,
+    "stations_with_dc_fast": 54,
+    "total_dc_fast_ports_partial": 132
+  },
+  {
+    "state": "IL",
+    "city": "CHICAGO",
+    "total_stations": 347,
+    "open_stations": 343,
+    "total_level2_ports": 902,
+    "stations_with_dc_fast": 46,
+    "total_dc_fast_ports_partial": 279
+  },
+  {
+    "state": "FL",
+    "city": "ORLANDO",
+    "total_stations": 346,
+    "open_stations": 340,
+    "total_level2_ports": 1070,
+    "stations_with_dc_fast": 74,
+    "total_dc_fast_ports_partial": 323
+  },
+  {
+    "state": "NV",
+    "city": "LAS VEGAS",
+    "total_stations": 337,
+    "open_stations": 334,
+    "total_level2_ports": 1043,
+    "stations_with_dc_fast": 81,
+    "total_dc_fast_ports_partial": 548
+  },
+  {
+    "state": "MA",
+    "city": "CAMBRIDGE",
+    "total_stations": 337,
+    "open_stations": 336,
+    "total_level2_ports": 782,
+    "stations_with_dc_fast": 3,
+    "total_dc_fast_ports_partial": 8
+  },
+  {
+    "state": "WA",
+    "city": "BELLEVUE",
+    "total_stations": 332,
+    "open_stations": 328,
+    "total_level2_ports": 718,
+    "stations_with_dc_fast": 11,
+    "total_dc_fast_ports_partial": 30
+  }
+]
