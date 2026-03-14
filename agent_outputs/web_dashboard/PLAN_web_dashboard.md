@@ -105,6 +105,129 @@ git add data/ && git commit -m "refresh dashboard data" && git push
 # GitHub Pages auto-deploys
 ```
 
+## Automated Daily Refresh (Future Enhancement)
+
+The dashboard data can be auto-refreshed daily at midnight so the site always shows the latest Snowflake data without manual intervention. Two approaches:
+
+### Approach A: GitHub Actions Scheduled Workflow (Recommended)
+
+A cron-triggered GitHub Actions workflow that runs `export_data.py`, commits updated JSON to `docs/data/`, and GitHub Pages auto-redeploys.
+
+**Why this is the best fit:**
+- Runs on GitHub's infrastructure — no dependency on local machine or Airflow container
+- Snowflake credentials stored securely as GitHub repo secrets (never in code)
+- Clean separation of concerns: Airflow handles ingestion/transforms, GitHub Actions handles dashboard refresh
+- Free for public repos (2,000 minutes/month for private repos on free tier)
+
+**Implementation:**
+1. Add Snowflake credentials as GitHub repo secrets:
+   - `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, `SNOWFLAKE_PASSWORD`, `SNOWFLAKE_DATABASE`, `SNOWFLAKE_WAREHOUSE`, `SNOWFLAKE_ROLE`
+
+2. Create `.github/workflows/refresh-dashboard.yml`:
+
+```yaml
+name: Refresh Dashboard Data
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # midnight UTC daily
+  workflow_dispatch:         # allow manual trigger
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install snowflake-connector-python python-dotenv
+
+      - name: Export data from Snowflake
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+        run: cd web_dashboard && python export_data.py
+
+      - name: Copy to docs
+        run: |
+          cp web_dashboard/index.html docs/
+          cp -r web_dashboard/css web_dashboard/js web_dashboard/data docs/
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/ web_dashboard/data/
+          git diff --cached --quiet || (git commit -m "chore: refresh dashboard data [automated]" && git push)
+```
+
+**Pros:**
+- Zero infrastructure to manage
+- Credentials never leave GitHub's secret store
+- `workflow_dispatch` allows manual refresh on demand
+- Only commits when data actually changes (no empty commits)
+- GitHub Pages auto-redeploys on push
+
+**Cons:**
+- Decoupled from the Airflow pipeline — runs on a fixed schedule regardless of whether Airflow has ingested new data
+- Cron is UTC-based (midnight UTC ≠ midnight local time)
+- GitHub Actions minutes are limited on private repos
+
+---
+
+### Approach B: Airflow DAG Task
+
+Append export + git push tasks to the existing `dag_dbt_transform.py`, so the dashboard refreshes immediately after every successful dbt run.
+
+**Implementation:**
+1. Add a new task to `dag_dbt_transform.py` after `dbt_test`:
+
+```python
+export_and_deploy = BashOperator(
+    task_id="export_and_deploy_dashboard",
+    bash_command="""
+        cd /opt/airflow/web_dashboard && python export_data.py
+        cp index.html /opt/airflow/docs/
+        cp -r css js data /opt/airflow/docs/
+        cd /opt/airflow
+        git add docs/data/ web_dashboard/data/
+        git diff --cached --quiet || (git commit -m "chore: refresh dashboard data [airflow]" && git push)
+    """,
+)
+
+dbt_test >> export_and_deploy
+```
+
+2. Mount the repo directory into the Airflow Docker container
+3. Configure git credentials (SSH key or GitHub personal access token) inside the container
+
+**Pros:**
+- Tightly coupled to the data pipeline — dashboard refreshes only when new data is actually available
+- No separate scheduling to manage
+- Single source of truth for orchestration
+
+**Cons:**
+- Requires git inside the Airflow Docker container (extra setup)
+- Needs GitHub auth (SSH key or PAT) stored in the container env
+- Adds complexity to the Airflow setup — mixing data pipeline concerns with deployment
+- If the git push fails, it could block the DAG
+
+---
+
+### Recommendation
+
+**Start with Approach A (GitHub Actions)** — it's simpler, keeps concerns separated, and doesn't require modifying the Airflow Docker setup. If tighter coupling with the data pipeline becomes important later, migrate to Approach B.
+
+---
+
 ## Key Files to Reference During Implementation
 - `mock_dashboard/app.py` — exact Plotly chart specs to translate
 - `mock_dashboard/mock_data.py` — column names and data shapes

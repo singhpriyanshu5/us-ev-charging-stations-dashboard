@@ -2,7 +2,7 @@
 
 An end-to-end data engineering pipeline that ingests real US EV charging station data, transforms it through a layered warehouse, and surfaces insights on a live analytics dashboard.
 
-**Stack**: NREL AFDC API + US Census API → Airflow (Docker) → Snowflake → dbt → Preset.io
+**Stack**: NREL AFDC API + US Census API → Airflow (Docker) → Snowflake → dbt → Web Dashboard (Plotly.js) / Preset.io
 
 ---
 
@@ -45,7 +45,12 @@ Snowflake (EV_ANALYTICS database)
 ├── curated.*       — dbt staging views (cleaned, typed, deduplicated)
 └── analytics.*     — dbt mart tables (aggregated, dashboard-ready)
 
-Preset.io
+Web Dashboard (v2)
+├── export_data.py     — Snowflake → JSON export (~65KB total)
+├── index.html         — single-page static dashboard (12 Plotly.js charts)
+└── docs/              — GitHub Pages deployment folder
+
+Preset.io (v1)
 └── 9 charts assembled into one dashboard (connected to analytics schema via dashboard_ro role)
 ```
 
@@ -88,13 +93,30 @@ ev-charging-stations-dashboard/
 │   └── ev_registrations_2024.csv
 ├── sql/
 │   └── snowflake_setup.sql
-├── mock_dashboard/
+├── web_dashboard/                          # v2 — static web frontend
+│   ├── export_data.py                      # Snowflake → JSON exporter
+│   ├── index.html                          # Single-page dashboard
+│   ├── css/dashboard.css                   # Styling (CSS Grid, responsive)
+│   ├── js/dashboard.js                     # 12 Plotly.js chart functions
+│   └── data/                               # Exported JSON files (~65KB)
+│       ├── kpis.json
+│       ├── stations_by_state.json
+│       ├── stations_by_city.json
+│       ├── ev_density.json
+│       ├── adoption_vs_infrastructure.json
+│       ├── stations_by_region.json
+│       └── stations_over_time.json
+├── docs/                                   # GitHub Pages deployment (copy of web_dashboard static files)
+├── mock_dashboard/                         # Local Streamlit preview (simulated data)
 │   ├── app.py
 │   └── mock_data.py
 └── agent_outputs/
     ├── PLAN.md
     ├── implementation_summary.md
-    └── chart_recommendations.md
+    ├── chart_recommendations.md
+    └── web_dashboard/
+        ├── PLAN_web_dashboard.md
+        └── implementation_summary_web_dashboard.md
 ```
 
 ---
@@ -155,6 +177,43 @@ Create a Snowflake connection in Preset with:
 - **Role**: `dashboard_ro`
 
 Add datasets: `fct_ev_stations_by_state`, `fct_ev_stations_by_city`, `fct_ev_density`, `fct_ev_adoption_vs_infrastructure`, `fct_ev_stations_over_time`, `fct_ev_stations_by_region`
+
+---
+
+## Web Dashboard (v2) — Static Frontend
+
+A standalone HTML/Plotly.js dashboard that can be hosted and shared as a URL. No backend server needed at runtime — all data is pre-exported as JSON from Snowflake.
+
+### Export data and test locally
+
+```bash
+# Export Snowflake analytics tables to JSON (requires .env with Snowflake credentials)
+cd web_dashboard
+python export_data.py
+
+# Serve locally (fetch() requires HTTP, won't work from file://)
+python -m http.server 8000
+# Open http://localhost:8000
+```
+
+### Deploy to GitHub Pages
+
+The `docs/` folder is a copy of the static site files, ready for GitHub Pages:
+
+1. Copy latest files: `cp index.html ../docs/ && cp -r css js data ../docs/`
+2. Push to `main`
+3. In repo **Settings → Pages**, set Source to **Deploy from branch** → `main` / `/docs`
+
+Live URL: `https://singhpriyanshu5.github.io/us-ev-charging-stations-dashboard/`
+
+### Refresh dashboard data
+
+```bash
+cd dbt && dbt run --target prod       # refresh analytics tables
+cd ../web_dashboard && python export_data.py  # re-export JSON
+cp index.html ../docs/ && cp -r css js data ../docs/
+cd .. && git add docs/ web_dashboard/data/ && git commit -m "refresh dashboard data" && git push
+```
 
 ---
 
