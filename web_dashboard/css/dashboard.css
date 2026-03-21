@@ -1,3 +1,32 @@
+/* ── CSS Variables & Theming ──────────────────────────────────── */
+:root {
+    --bg-body: #f0f2f5;
+    --bg-card: #fff;
+    --bg-header: #1a1a2e;
+    --text-primary: #1a1a2e;
+    --text-secondary: #64748b;
+    --text-header: #fff;
+    --text-subtitle: #94a3b8;
+    --text-section: #334155;
+    --border-section: #e2e8f0;
+    --shadow-card: rgba(0, 0, 0, 0.08);
+    --text-footer: #94a3b8;
+}
+
+[data-theme="dark"] {
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --bg-header: #0b1120;
+    --text-primary: #f1f5f9;
+    --text-secondary: #a1b3c9;
+    --text-header: #f8fafc;
+    --text-subtitle: #7a8da3;
+    --text-section: #e2e8f0;
+    --border-section: #334155;
+    --shadow-card: rgba(0, 0, 0, 0.3);
+    --text-footer: #7a8da3;
+}
+
 /* ── Reset & Base ─────────────────────────────────────────────── */
 *, *::before, *::after {
     margin: 0;
@@ -7,17 +36,19 @@
 
 body {
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #f0f2f5;
-    color: #1a1a2e;
+    background: var(--bg-body);
+    color: var(--text-primary);
     line-height: 1.5;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* ── Header ──────────────────────────────────────────────────── */
 .dashboard-header {
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--bg-header);
+    color: var(--text-header);
     padding: 28px 40px 22px;
     text-align: center;
+    position: relative;
 }
 
 .dashboard-header h1 {
@@ -29,9 +60,40 @@ body {
 .dashboard-header .subtitle {
     margin-top: 4px;
     font-size: 0.85rem;
-    color: #94a3b8;
+    color: var(--text-subtitle);
     font-weight: 400;
 }
+
+/* ── Theme Toggle ────────────────────────────────────────────── */
+.theme-toggle {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--text-header);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.theme-toggle .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
 
 /* ── Main Container ──────────────────────────────────────────── */
 .dashboard-container {
@@ -49,19 +111,20 @@ body {
 }
 
 .kpi-card {
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 12px;
     padding: 24px 28px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px var(--shadow-card);
     display: flex;
     flex-direction: column;
     gap: 6px;
+    transition: background-color 0.3s;
 }
 
 .kpi-label {
     font-size: 0.78rem;
     font-weight: 500;
-    color: #64748b;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
@@ -69,7 +132,7 @@ body {
 .kpi-value {
     font-size: 2.4rem;
     font-weight: 700;
-    color: #1a1a2e;
+    color: var(--text-primary);
     letter-spacing: -0.03em;
 }
 
@@ -81,19 +144,20 @@ body {
 .section-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #334155;
+    color: var(--text-section);
     margin-bottom: 16px;
     padding-bottom: 8px;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid var(--border-section);
 }
 
 /* ── Chart Cards ─────────────────────────────────────────────── */
 .chart-card {
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px var(--shadow-card);
     margin-bottom: 20px;
+    transition: background-color 0.3s;
 }
 
 .chart-card.full-width {
@@ -124,8 +188,179 @@ body {
 .dashboard-footer {
     text-align: center;
     padding: 20px;
-    color: #94a3b8;
+    color: var(--text-footer);
     font-size: 0.8rem;
+}
+
+/* ── State Modal ─────────────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    max-width: 920px;
+    width: 90vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+}
+
+.modal-close:hover {
+    color: var(--text-primary);
+}
+
+.modal-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 16px 0 24px;
+}
+
+.modal-kpi {
+    background: var(--bg-body);
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: center;
+}
+
+.modal-kpi-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.modal-kpi-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 2px;
+}
+
+.modal-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.modal-chart {
+    min-height: 320px;
+}
+
+.modal-no-data {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Hint on choropleth card */
+.chart-card.clickable-hint {
+    cursor: pointer;
+    position: relative;
+}
+
+.click-hint {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+/* ── Timeline Controls ───────────────────────────────────────── */
+.timeline-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 8px 0;
+}
+
+.timeline-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border-section);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.timeline-btn:hover {
+    background: var(--border-section);
+}
+
+#timeline-slider {
+    flex: 1;
+    accent-color: #5AC8C8;
+    cursor: pointer;
+}
+
+.timeline-year {
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-width: 3em;
+    color: var(--text-primary);
+}
+
+.timeline-counter {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.timeline-yoy {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.timeline-yoy.positive {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+}
+
+.timeline-yoy.negative {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
 }
 
 /* ── Responsive ──────────────────────────────────────────────── */
@@ -136,6 +371,10 @@ body {
 
     .dashboard-header h1 {
         font-size: 1.2rem;
+    }
+
+    .theme-toggle {
+        right: 12px;
     }
 
     .dashboard-container {
@@ -156,5 +395,13 @@ body {
 
     .chart-container {
         min-height: 300px;
+    }
+
+    .modal-charts {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        padding: 20px;
     }
 }

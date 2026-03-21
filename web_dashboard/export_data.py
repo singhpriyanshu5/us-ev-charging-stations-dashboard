@@ -39,7 +39,6 @@ QUERIES = {
                total_dc_fast_ports_partial
         FROM EV_ANALYTICS.analytics.fct_ev_stations_by_city
         ORDER BY total_stations DESC
-        LIMIT 25
     """,
     "ev_density": """
         SELECT state, state_name, population, population_year,

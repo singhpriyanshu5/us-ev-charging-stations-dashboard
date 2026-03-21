@@ -15,6 +15,14 @@
     <header class="dashboard-header">
         <h1>EV Charging Infrastructure & Adoption Dashboard</h1>
         <p class="subtitle">United States — Live data from NREL, US Census & DOE</p>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
     </header>
 
     <main class="dashboard-container">
@@ -40,8 +48,9 @@
             <h2 class="section-title">Overview</h2>
 
             <!-- Choropleth Map -->
-            <div class="chart-card full-width">
+            <div class="chart-card full-width clickable-hint">
                 <div id="chart-choropleth" class="chart-container"></div>
+                <p class="click-hint">Click any state on the map to drill down</p>
             </div>
 
             <!-- Top 15 States + DC Fast vs L2 -->
@@ -62,6 +71,13 @@
             <!-- Station Growth Over Time -->
             <div class="chart-card full-width">
                 <div id="chart-growth" class="chart-container"></div>
+                <div class="timeline-controls" id="timeline-controls">
+                    <button class="timeline-btn" id="timeline-play">&#9654;</button>
+                    <input type="range" id="timeline-slider" min="2000" max="2024" value="2024" step="1">
+                    <span class="timeline-year" id="timeline-year">2024</span>
+                    <span class="timeline-counter" id="timeline-counter"></span>
+                    <span class="timeline-yoy" id="timeline-yoy"></span>
+                </div>
             </div>
         </section>
 
@@ -109,6 +125,19 @@
     <footer class="dashboard-footer">
         <p>Data sources: NREL AFDC API, US Census ACS5, DOE EV Registration Data</p>
     </footer>
+
+    <!-- State Drill-Down Modal -->
+    <div class="modal-overlay" id="state-modal" hidden>
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h2 id="modal-title"></h2>
+            <div class="modal-kpis" id="modal-kpis"></div>
+            <div class="modal-charts">
+                <div id="modal-chart-cities" class="modal-chart"></div>
+                <div id="modal-chart-breakdown" class="modal-chart"></div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
     <script src="js/dashboard.js"></script>
