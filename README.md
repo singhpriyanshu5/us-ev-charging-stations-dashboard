@@ -4,6 +4,8 @@ An end-to-end data engineering pipeline that ingests real US EV charging station
 
 **Stack**: NREL AFDC API + US Census API → Airflow (Docker) → Snowflake → dbt → Web Dashboard (Plotly.js) / Preset.io
 
+**Live Dashboard:** [singhpriyanshu5.github.io/us-ev-charging-stations-dashboard](https://singhpriyanshu5.github.io/us-ev-charging-stations-dashboard/)
+
 ---
 
 ## Dashboard Preview
