@@ -34,6 +34,8 @@ An end-to-end data engineering pipeline that ingests real US EV charging station
 
 ## Architecture
 
+![System Architecture](./agent_outputs/ev_charging_architecture.png)
+
 ```
 Data Sources
 ├── NREL AFDC API          → ~85,800 US EV stations (daily, live)
