@@ -8,7 +8,7 @@ An end-to-end data engineering pipeline that ingests real US EV charging station
 
 ## Dashboard Preview
 
-![EV Charging Infrastructure & Adoption Dashboard](./EV_Charging_Infrastructure_Adoption_Dashboard_v2_image.png)
+![EV Charging Infrastructure & Adoption Dashboard](./dashboard_v3_preview.png)
 
 ---
 
@@ -23,6 +23,12 @@ An end-to-end data engineering pipeline that ingests real US EV charging station
 - DC fast penetration rate by state — % of stations with fast-charging capability
 - L2 ports per station by state — hub-style vs single-port network design patterns
 - Regional breakdown — station counts and gap scores across 5 US regions
+
+### Interactive Features (v3)
+
+- **Dark mode toggle** — persistent theme switcher (light/dark) with smooth transitions across all charts and UI
+- **State drill-down modal** — click any state on the choropleth map to see KPIs, top cities bar chart, and charger type donut breakdown
+- **Animated timeline** — progressive-reveal animation on the growth chart with play/pause, scrubber, and YoY growth rate badge
 
 ---
 
@@ -45,9 +51,12 @@ Snowflake (EV_ANALYTICS database)
 ├── curated.*       — dbt staging views (cleaned, typed, deduplicated)
 └── analytics.*     — dbt mart tables (aggregated, dashboard-ready)
 
-Web Dashboard (v2)
-├── export_data.py     — Snowflake → JSON export (~65KB total)
+Web Dashboard (v3)
+├── export_data.py     — Snowflake → JSON export (~9,300 city rows, ~340KB)
 ├── index.html         — single-page static dashboard (12 Plotly.js charts)
+├── Dark mode          — CSS variables + localStorage, Plotly re-theming via JS
+├── State drill-down   — choropleth click → modal with KPIs + city chart + donut
+├── Animated timeline  — progressive-reveal growth chart with play/pause + YoY badge
 └── docs/              — GitHub Pages deployment folder
 
 Preset.io (v1)
@@ -93,12 +102,12 @@ ev-charging-stations-dashboard/
 │   └── ev_registrations_2024.csv
 ├── sql/
 │   └── snowflake_setup.sql
-├── web_dashboard/                          # v2 — static web frontend
+├── web_dashboard/                          # v3 — static web frontend
 │   ├── export_data.py                      # Snowflake → JSON exporter
 │   ├── index.html                          # Single-page dashboard
-│   ├── css/dashboard.css                   # Styling (CSS Grid, responsive)
-│   ├── js/dashboard.js                     # 12 Plotly.js chart functions
-│   └── data/                               # Exported JSON files (~65KB)
+│   ├── css/dashboard.css                   # Theming (CSS variables, dark mode, modal, timeline)
+│   ├── js/dashboard.js                     # 12 charts + dark mode + drill-down modal + timeline animation
+│   └── data/                               # Exported JSON files (~340KB)
 │       ├── kpis.json
 │       ├── stations_by_state.json
 │       ├── stations_by_city.json
@@ -112,6 +121,7 @@ ev-charging-stations-dashboard/
 │   └── mock_data.py
 └── agent_outputs/
     ├── PLAN.md
+    ├── PLAN_dashboard_v3_enhancements.md
     ├── implementation_summary.md
     ├── chart_recommendations.md
     └── web_dashboard/
@@ -180,9 +190,9 @@ Add datasets: `fct_ev_stations_by_state`, `fct_ev_stations_by_city`, `fct_ev_den
 
 ---
 
-## Web Dashboard (v2) — Static Frontend
+## Web Dashboard (v3) — Static Frontend
 
-A standalone HTML/Plotly.js dashboard that can be hosted and shared as a URL. No backend server needed at runtime — all data is pre-exported as JSON from Snowflake.
+A standalone HTML/Plotly.js dashboard with dark mode, state drill-down modal, and animated timeline. No backend server needed at runtime — all data is pre-exported as JSON from Snowflake.
 
 ### Export data and test locally
 
