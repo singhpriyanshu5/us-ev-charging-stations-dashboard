@@ -3,6 +3,7 @@ __pycache__/
 *.pyo
 .env
 .DS_Store
+.cache_ggshield
 
 # Airflow logs
 airflow/logs/
