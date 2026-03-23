@@ -2,7 +2,7 @@
 
 An end-to-end data engineering pipeline that ingests real US EV charging station data, transforms it through a layered warehouse, and surfaces insights on a live analytics dashboard.
 
-**Stack**: NREL AFDC API + US Census API → Airflow (Docker) → Snowflake → dbt → Web Dashboard (Plotly.js) / Preset.io
+**Stack**: NREL AFDC API + US Census API → Airflow (Docker) → Snowflake → dbt → GitHub Actions → Web Dashboard (Plotly.js) / Preset.io
 
 **Live Dashboard:** [singhpriyanshu5.github.io/us-ev-charging-stations-dashboard](https://singhpriyanshu5.github.io/us-ev-charging-stations-dashboard/)
 
@@ -45,15 +45,24 @@ Data Sources
 └── US Census ACS5 API     → State populations (annual)
 
 Airflow (Docker Compose)
-├── dag_nrel_stations_daily          @daily   — full snapshot with skip-if-unchanged check
+├── dag_nrel_stations_daily          @daily   — full snapshot with skip-if-unchanged
+│   └── triggers → dbt_transform
 ├── dag_ev_registrations_historical  @once    — loads data/ev_registrations_2024.csv
+│   └── triggers → dbt_transform
 ├── dag_census_population_annual     @yearly  — Census ACS5 API pull
-└── dag_dbt_transform                triggered — runs dbt run + dbt test after ingest
+│   └── triggers → dbt_transform
+└── dag_dbt_transform                triggered — dbt run + test → dispatches GitHub Actions deploy
 
 Snowflake (EV_ANALYTICS database)
 ├── raw.*           — landing zone, exact source replica
 ├── curated.*       — dbt staging views (cleaned, typed, deduplicated)
 └── analytics.*     — dbt mart tables (aggregated, dashboard-ready)
+
+GitHub Actions (CI/CD)
+└── deploy-dashboard.yml  — triggered by Airflow or push to web_dashboard/**
+    ├── Runs export_data.py (Snowflake → JSON)
+    ├── Copies static files to docs/
+    └── Commits + pushes only if data changed ([skip ci] to prevent loops)
 
 Web Dashboard (v3)
 ├── export_data.py     — Snowflake → JSON export (~9,300 city rows, ~340KB)
@@ -73,6 +82,9 @@ Preset.io (v1)
 
 ```
 ev-charging-stations-dashboard/
+├── .github/
+│   └── workflows/
+│       └── deploy-dashboard.yml          # Automated Snowflake → GitHub Pages deploy
 ├── airflow/
 │   ├── Dockerfile
 │   ├── requirements.txt
@@ -156,6 +168,7 @@ SNOWFLAKE_WAREHOUSE=COMPUTE_WH
 SNOWFLAKE_ROLE=ACCOUNTADMIN
 NREL_API_KEY=<your_key>
 AIRFLOW_UID=50000
+GITHUB_PAT=<your_pat>                 # fine-grained PAT with Actions read/write scope
 ```
 
 ### 2. Run Snowflake setup
@@ -173,15 +186,24 @@ docker compose up --build
 
 Wait ~60 seconds, then open http://localhost:8080 (admin / admin).
 
-### 4. Run the DAGs
+### 4. Configure GitHub Secrets
+
+In repo **Settings → Secrets and variables → Actions**, add these secrets:
+- `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, `SNOWFLAKE_PASSWORD`, `SNOWFLAKE_DATABASE`, `SNOWFLAKE_WAREHOUSE`, `SNOWFLAKE_ROLE`
+
+These are used by the GitHub Actions deploy workflow to export data from Snowflake.
+
+### 5. Run the DAGs
 
 In Airflow UI, run in this order:
-1. `ev_registrations_historical` — one-time load from CSV
-2. `census_population_annual` — one-time Census API pull
-3. `nrel_stations_daily` — full station snapshot (~85k rows, ~5 min)
-4. `dbt_transform` — triggered automatically after step 3, or run manually
+1. `ev_registrations_historical` — one-time load from CSV → triggers dbt
+2. `census_population_annual` — one-time Census API pull → triggers dbt
+3. `nrel_stations_daily` — full station snapshot (~85k rows, ~5 min) → triggers dbt
+4. `dbt_transform` — runs automatically after each ingest DAG, then dispatches GitHub Actions to deploy the dashboard
 
-### 5. Connect Preset.io
+After initial setup, the pipeline is fully automated — NREL refreshes daily, Census refreshes yearly, and each triggers dbt → GitHub Actions → GitHub Pages.
+
+### 6. Connect Preset.io
 
 Create a Snowflake connection in Preset with:
 - **Account**: your Snowflake account identifier (org-account format)
@@ -210,24 +232,30 @@ python -m http.server 8000
 # Open http://localhost:8000
 ```
 
-### Deploy to GitHub Pages
+### Automated Deployment
 
-The `docs/` folder is a copy of the static site files, ready for GitHub Pages:
+Dashboard deployment is fully automated via GitHub Actions (`.github/workflows/deploy-dashboard.yml`):
 
-1. Copy latest files: `cp index.html ../docs/ && cp -r css js data ../docs/`
-2. Push to `main`
-3. In repo **Settings → Pages**, set Source to **Deploy from branch** → `main` / `/docs`
+```
+Airflow DAG completes → dbt run + test → triggers GitHub Actions workflow
+                                          ├── export_data.py (Snowflake → JSON)
+                                          ├── copy static files to docs/
+                                          └── commit + push (only if data changed)
+```
+
+**Triggers:**
+- **Airflow** — after any dbt run completes (daily NREL, yearly Census, manual EV registrations)
+- **Push** — any change to `web_dashboard/**` on `main` (e.g. UI updates)
+- **Manual** — via GitHub Actions UI (`workflow_dispatch`)
+
+**GitHub Pages setup (one-time):** In repo **Settings → Pages**, set Source to **Deploy from branch** → `main` / `/docs`
+
+**Refresh cadence:**
+- NREL stations: daily
+- Census population: yearly
+- EV registrations: manual (CSV-based, no API)
 
 Live URL: `https://singhpriyanshu5.github.io/us-ev-charging-stations-dashboard/`
-
-### Refresh dashboard data
-
-```bash
-cd dbt && dbt run --target prod       # refresh analytics tables
-cd ../web_dashboard && python export_data.py  # re-export JSON
-cp index.html ../docs/ && cp -r css js data ../docs/
-cd .. && git add docs/ web_dashboard/data/ && git commit -m "refresh dashboard data" && git push
-```
 
 ---
 

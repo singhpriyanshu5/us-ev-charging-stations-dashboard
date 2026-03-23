@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 import snowflake.connector
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 SNOWFLAKE_ACCOUNT = os.environ["SNOWFLAKE_ACCOUNT"]
 SNOWFLAKE_USER = os.environ["SNOWFLAKE_USER"]
@@ -106,3 +107,11 @@ with DAG(
         python_callable=load_registrations,
         provide_context=True,
     )
+
+    trigger_dbt = TriggerDagRunOperator(
+        task_id="trigger_dbt_transform",
+        trigger_dag_id="dbt_transform",
+        wait_for_completion=False,
+    )
+
+    load >> trigger_dbt

@@ -1,15 +1,23 @@
 """
 DAG 4: dbt Transform — runs after DAG 1 (NREL daily ingestion)
 Executes dbt run then dbt test against the Snowflake warehouse.
+After dbt completes, triggers the GitHub Actions deploy workflow
+to export fresh data and publish to GitHub Pages.
+
 Triggered automatically by dag_nrel_stations_daily via TriggerDagRunOperator.
 Can also be triggered manually to rebuild all models.
 """
 
+import logging
+import os
 from datetime import datetime, timedelta
 
+import requests
 from airflow import DAG
 from airflow.operators.bash import BashOperator
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.operators.python import PythonOperator
+
+log = logging.getLogger(__name__)
 
 DBT_DIR = "/opt/airflow/dbt"
 DBT_PROFILES_DIR = "/opt/airflow/dbt"
@@ -47,18 +55,29 @@ with DAG(
         ),
     )
 
-    dbt_run >> dbt_test
+    def trigger_dashboard_deploy(**context):
+        """POST to GitHub Actions API to dispatch the deploy-dashboard workflow."""
+        pat = os.environ.get("GITHUB_PAT")
+        if not pat:
+            log.warning("GITHUB_PAT not set — skipping dashboard deploy trigger")
+            return
 
+        resp = requests.post(
+            "https://api.github.com/repos/singhpriyanshu5/us-ev-charging-stations-dashboard"
+            "/actions/workflows/deploy-dashboard.yml/dispatches",
+            json={"ref": "main"},
+            headers={
+                "Authorization": f"Bearer {pat}",
+                "Accept": "application/vnd.github.v3+json",
+            },
+            timeout=15,
+        )
+        resp.raise_for_status()
+        log.info("GitHub Actions deploy workflow dispatched successfully")
 
-# ── Add this trigger to dag_nrel_stations_daily ──────────────────────────────
-# In dag_nrel_stations_daily.py, after the `load` task, add:
-#
-#   trigger_dbt = TriggerDagRunOperator(
-#       task_id="trigger_dbt_transform",
-#       trigger_dag_id="dbt_transform",
-#       wait_for_completion=False,
-#   )
-#   check_update >> fetch >> load >> trigger_dbt
-#
-# This wires DAG 1 → DAG 4 automatically each day.
-# ─────────────────────────────────────────────────────────────────────────────
+    trigger_deploy = PythonOperator(
+        task_id="trigger_dashboard_deploy",
+        python_callable=trigger_dashboard_deploy,
+    )
+
+    dbt_run >> dbt_test >> trigger_deploy
