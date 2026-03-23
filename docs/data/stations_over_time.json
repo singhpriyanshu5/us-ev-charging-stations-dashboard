@@ -109,18 +109,18 @@
   },
   {
     "year": 2014,
-    "new_stations": 903,
+    "new_stations": 904,
     "new_dc_fast_stations": 330,
-    "new_l2_only_stations": 573,
-    "cumulative_stations": 3136,
+    "new_l2_only_stations": 574,
+    "cumulative_stations": 3137,
     "cumulative_dc_fast": 624,
-    "cumulative_l2_only": 2512
+    "cumulative_l2_only": 2513
   },
   {
     "year": 2015,
-    "new_stations": 1643,
+    "new_stations": 1642,
     "new_dc_fast_stations": 1021,
-    "new_l2_only_stations": 622,
+    "new_l2_only_stations": 621,
     "cumulative_stations": 4779,
     "cumulative_dc_fast": 1645,
     "cumulative_l2_only": 3134
@@ -145,83 +145,83 @@
   },
   {
     "year": 2018,
-    "new_stations": 2374,
+    "new_stations": 2372,
     "new_dc_fast_stations": 1241,
-    "new_l2_only_stations": 1133,
-    "cumulative_stations": 10729,
+    "new_l2_only_stations": 1131,
+    "cumulative_stations": 10727,
     "cumulative_dc_fast": 4825,
-    "cumulative_l2_only": 5904
+    "cumulative_l2_only": 5902
   },
   {
     "year": 2019,
-    "new_stations": 2990,
+    "new_stations": 2988,
     "new_dc_fast_stations": 786,
-    "new_l2_only_stations": 2204,
-    "cumulative_stations": 13719,
+    "new_l2_only_stations": 2202,
+    "cumulative_stations": 13715,
     "cumulative_dc_fast": 5611,
-    "cumulative_l2_only": 8108
+    "cumulative_l2_only": 8104
   },
   {
     "year": 2020,
-    "new_stations": 6030,
+    "new_stations": 6027,
     "new_dc_fast_stations": 1019,
-    "new_l2_only_stations": 5011,
-    "cumulative_stations": 19749,
+    "new_l2_only_stations": 5008,
+    "cumulative_stations": 19742,
     "cumulative_dc_fast": 6630,
-    "cumulative_l2_only": 13119
+    "cumulative_l2_only": 13112
   },
   {
     "year": 2021,
-    "new_stations": 14302,
-    "new_dc_fast_stations": 1194,
-    "new_l2_only_stations": 13108,
-    "cumulative_stations": 34051,
-    "cumulative_dc_fast": 7824,
-    "cumulative_l2_only": 26227
+    "new_stations": 14291,
+    "new_dc_fast_stations": 1191,
+    "new_l2_only_stations": 13100,
+    "cumulative_stations": 34033,
+    "cumulative_dc_fast": 7821,
+    "cumulative_l2_only": 26212
   },
   {
     "year": 2022,
-    "new_stations": 10172,
+    "new_stations": 10161,
     "new_dc_fast_stations": 1350,
-    "new_l2_only_stations": 8822,
-    "cumulative_stations": 44223,
-    "cumulative_dc_fast": 9174,
-    "cumulative_l2_only": 35049
+    "new_l2_only_stations": 8811,
+    "cumulative_stations": 44194,
+    "cumulative_dc_fast": 9171,
+    "cumulative_l2_only": 35023
   },
   {
     "year": 2023,
-    "new_stations": 12041,
+    "new_stations": 12043,
     "new_dc_fast_stations": 1738,
-    "new_l2_only_stations": 10303,
-    "cumulative_stations": 56264,
-    "cumulative_dc_fast": 10912,
-    "cumulative_l2_only": 45352
+    "new_l2_only_stations": 10305,
+    "cumulative_stations": 56237,
+    "cumulative_dc_fast": 10909,
+    "cumulative_l2_only": 45328
   },
   {
     "year": 2024,
-    "new_stations": 12910,
+    "new_stations": 12920,
     "new_dc_fast_stations": 2340,
-    "new_l2_only_stations": 10570,
-    "cumulative_stations": 69174,
-    "cumulative_dc_fast": 13252,
-    "cumulative_l2_only": 55922
+    "new_l2_only_stations": 10580,
+    "cumulative_stations": 69157,
+    "cumulative_dc_fast": 13249,
+    "cumulative_l2_only": 55908
   },
   {
     "year": 2025,
-    "new_stations": 13555,
-    "new_dc_fast_stations": 1777,
-    "new_l2_only_stations": 11778,
-    "cumulative_stations": 82729,
-    "cumulative_dc_fast": 15029,
-    "cumulative_l2_only": 67700
+    "new_stations": 13564,
+    "new_dc_fast_stations": 1776,
+    "new_l2_only_stations": 11788,
+    "cumulative_stations": 82721,
+    "cumulative_dc_fast": 15025,
+    "cumulative_l2_only": 67696
   },
   {
     "year": 2026,
-    "new_stations": 2863,
-    "new_dc_fast_stations": 383,
-    "new_l2_only_stations": 2480,
-    "cumulative_stations": 85592,
-    "cumulative_dc_fast": 15412,
-    "cumulative_l2_only": 70180
+    "new_stations": 2900,
+    "new_dc_fast_stations": 392,
+    "new_l2_only_stations": 2508,
+    "cumulative_stations": 85621,
+    "cumulative_dc_fast": 15417,
+    "cumulative_l2_only": 70204
   }
 ]
