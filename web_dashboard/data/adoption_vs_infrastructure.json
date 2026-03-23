@@ -80,7 +80,7 @@
     "population": 39356104,
     "population_year": 2022,
     "total_stations": 20659,
-    "open_stations": 20239,
+    "open_stations": 20238,
     "stations_with_dc_fast": 3187,
     "stations_per_100k": 52.5,
     "ev_count": 1533900,
@@ -390,21 +390,6 @@
     "ev_adoption_rate": 1101.5
   },
   {
-    "state": "SC",
-    "state_name": "South Carolina",
-    "population": 5142750,
-    "population_year": 2022,
-    "total_stations": 742,
-    "open_stations": 720,
-    "stations_with_dc_fast": 213,
-    "stations_per_100k": 14.4,
-    "ev_count": 34000,
-    "registration_year": 2024,
-    "evs_per_station": 45.8,
-    "infrastructure_gap_score": 45.8,
-    "ev_adoption_rate": 661.1
-  },
-  {
     "state": "MD",
     "state_name": "Maryland",
     "population": 6161707,
@@ -418,6 +403,21 @@
     "evs_per_station": 45.8,
     "infrastructure_gap_score": 45.8,
     "ev_adoption_rate": 1379.5
+  },
+  {
+    "state": "SC",
+    "state_name": "South Carolina",
+    "population": 5142750,
+    "population_year": 2022,
+    "total_stations": 742,
+    "open_stations": 720,
+    "stations_with_dc_fast": 213,
+    "stations_per_100k": 14.4,
+    "ev_count": 34000,
+    "registration_year": 2024,
+    "evs_per_station": 45.8,
+    "infrastructure_gap_score": 45.8,
+    "ev_adoption_rate": 661.1
   },
   {
     "state": "WY",

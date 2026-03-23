@@ -57,7 +57,7 @@
     "population": 39356104,
     "population_year": 2022,
     "total_stations": 20659,
-    "open_stations": 20239,
+    "open_stations": 20238,
     "stations_with_dc_fast": 3187,
     "total_level2_ports": 56895,
     "stations_per_100k": 52.5,
@@ -312,19 +312,6 @@
     "level2_ports_per_100k": 59.4
   },
   {
-    "state": "MI",
-    "state_name": "Michigan",
-    "population": 10057921,
-    "population_year": 2022,
-    "total_stations": 2154,
-    "open_stations": 2092,
-    "stations_with_dc_fast": 364,
-    "total_level2_ports": 4364,
-    "stations_per_100k": 21.4,
-    "open_stations_per_100k": 20.8,
-    "level2_ports_per_100k": 43.4
-  },
-  {
     "state": "FL",
     "state_name": "Florida",
     "population": 21634529,
@@ -336,6 +323,19 @@
     "stations_per_100k": 21.4,
     "open_stations_per_100k": 20.9,
     "level2_ports_per_100k": 50.8
+  },
+  {
+    "state": "MI",
+    "state_name": "Michigan",
+    "population": 10057921,
+    "population_year": 2022,
+    "total_stations": 2154,
+    "open_stations": 2092,
+    "stations_with_dc_fast": 364,
+    "total_level2_ports": 4364,
+    "stations_per_100k": 21.4,
+    "open_stations_per_100k": 20.8,
+    "level2_ports_per_100k": 43.4
   },
   {
     "state": "KS",
@@ -559,19 +559,6 @@
     "level2_ports_per_100k": 28.7
   },
   {
-    "state": "AL",
-    "state_name": "Alabama",
-    "population": 5028092,
-    "population_year": 2022,
-    "total_stations": 676,
-    "open_stations": 659,
-    "stations_with_dc_fast": 240,
-    "total_level2_ports": 1295,
-    "stations_per_100k": 13.4,
-    "open_stations_per_100k": 13.1,
-    "level2_ports_per_100k": 25.8
-  },
-  {
     "state": "AR",
     "state_name": "Arkansas",
     "population": 3018669,
@@ -583,6 +570,19 @@
     "stations_per_100k": 13.4,
     "open_stations_per_100k": 13.0,
     "level2_ports_per_100k": 29.6
+  },
+  {
+    "state": "AL",
+    "state_name": "Alabama",
+    "population": 5028092,
+    "population_year": 2022,
+    "total_stations": 676,
+    "open_stations": 659,
+    "stations_with_dc_fast": 240,
+    "total_level2_ports": 1295,
+    "stations_per_100k": 13.4,
+    "open_stations_per_100k": 13.1,
+    "level2_ports_per_100k": 25.8
   },
   {
     "state": "WV",

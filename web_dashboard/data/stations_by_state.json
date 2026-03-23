@@ -2,9 +2,9 @@
   {
     "state": "CA",
     "total_stations": 20659,
-    "open_stations": 20239,
+    "open_stations": 20238,
     "planned_stations": 77,
-    "temp_unavailable_stations": 343,
+    "temp_unavailable_stations": 344,
     "total_level2_ports": 56895,
     "stations_with_dc_fast": 3187,
     "total_dc_fast_ports_partial": 18581,
