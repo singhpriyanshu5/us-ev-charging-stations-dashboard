@@ -123,6 +123,25 @@ function initThemeToggle() {
         localStorage.setItem("ev-dash-theme", next);
         updateChartsTheme();
     });
+
+    // First-visit toast to highlight theme toggle
+    if (!localStorage.getItem("ev-dash-toast-seen")) {
+        setTimeout(() => {
+            const toast = document.getElementById("theme-toast");
+            toast.classList.add("visible");
+
+            const autoDismiss = setTimeout(() => {
+                toast.classList.remove("visible");
+                localStorage.setItem("ev-dash-toast-seen", "1");
+            }, 8000);
+
+            document.getElementById("theme-toast-close").addEventListener("click", () => {
+                clearTimeout(autoDismiss);
+                toast.classList.remove("visible");
+                localStorage.setItem("ev-dash-toast-seen", "1");
+            });
+        }, 2000);
+    }
 }
 
 // ── KPI Tiles ────────────────────────────────────────────────────────────────

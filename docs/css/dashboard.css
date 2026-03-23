@@ -91,9 +91,9 @@ body {
     height: 20px;
 }
 
-.theme-toggle .icon-moon { display: none; }
-[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
-[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+.theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
 /* ── Main Container ──────────────────────────────────────────── */
 .dashboard-container {
@@ -361,6 +361,80 @@ body {
 .timeline-yoy.negative {
     background: rgba(239, 68, 68, 0.15);
     color: #ef4444;
+}
+
+/* ── Theme Toast ─────────────────────────────────────────────── */
+.theme-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    z-index: 200;
+    background: var(--bg-card);
+    border: 1px solid var(--border-section);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-width: 420px;
+    width: calc(100% - 2rem);
+    pointer-events: none;
+}
+
+.theme-toast.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.theme-toast-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(90, 200, 200, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5AC8C8;
+}
+
+.theme-toast-content {
+    flex: 1;
+}
+
+.theme-toast-title {
+    font-family: "Inter", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5AC8C8;
+    margin-bottom: 0.2rem;
+}
+
+.theme-toast-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.theme-toast-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 4px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+
+.theme-toast-close:hover {
+    color: var(--text-primary);
 }
 
 /* ── Responsive ──────────────────────────────────────────────── */
