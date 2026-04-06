@@ -109,119 +109,119 @@
   },
   {
     "year": 2014,
-    "new_stations": 905,
+    "new_stations": 904,
     "new_dc_fast_stations": 330,
-    "new_l2_only_stations": 575,
-    "cumulative_stations": 3137,
+    "new_l2_only_stations": 574,
+    "cumulative_stations": 3136,
     "cumulative_dc_fast": 624,
-    "cumulative_l2_only": 2513
+    "cumulative_l2_only": 2512
   },
   {
     "year": 2015,
     "new_stations": 1640,
     "new_dc_fast_stations": 1021,
     "new_l2_only_stations": 619,
-    "cumulative_stations": 4777,
+    "cumulative_stations": 4776,
     "cumulative_dc_fast": 1645,
-    "cumulative_l2_only": 3132
+    "cumulative_l2_only": 3131
   },
   {
     "year": 2016,
-    "new_stations": 1640,
+    "new_stations": 1639,
     "new_dc_fast_stations": 865,
-    "new_l2_only_stations": 775,
-    "cumulative_stations": 6417,
+    "new_l2_only_stations": 774,
+    "cumulative_stations": 6415,
     "cumulative_dc_fast": 2510,
-    "cumulative_l2_only": 3907
+    "cumulative_l2_only": 3905
   },
   {
     "year": 2017,
     "new_stations": 1934,
     "new_dc_fast_stations": 1074,
     "new_l2_only_stations": 860,
-    "cumulative_stations": 8351,
+    "cumulative_stations": 8349,
     "cumulative_dc_fast": 3584,
-    "cumulative_l2_only": 4767
+    "cumulative_l2_only": 4765
   },
   {
     "year": 2018,
     "new_stations": 2365,
     "new_dc_fast_stations": 1237,
     "new_l2_only_stations": 1128,
-    "cumulative_stations": 10716,
+    "cumulative_stations": 10714,
     "cumulative_dc_fast": 4821,
-    "cumulative_l2_only": 5895
+    "cumulative_l2_only": 5893
   },
   {
     "year": 2019,
     "new_stations": 2984,
     "new_dc_fast_stations": 778,
     "new_l2_only_stations": 2206,
-    "cumulative_stations": 13700,
+    "cumulative_stations": 13698,
     "cumulative_dc_fast": 5599,
-    "cumulative_l2_only": 8101
+    "cumulative_l2_only": 8099
   },
   {
     "year": 2020,
     "new_stations": 6011,
     "new_dc_fast_stations": 1009,
     "new_l2_only_stations": 5002,
-    "cumulative_stations": 19711,
+    "cumulative_stations": 19709,
     "cumulative_dc_fast": 6608,
-    "cumulative_l2_only": 13103
+    "cumulative_l2_only": 13101
   },
   {
     "year": 2021,
     "new_stations": 14282,
     "new_dc_fast_stations": 1187,
     "new_l2_only_stations": 13095,
-    "cumulative_stations": 33993,
+    "cumulative_stations": 33991,
     "cumulative_dc_fast": 7795,
-    "cumulative_l2_only": 26198
+    "cumulative_l2_only": 26196
   },
   {
     "year": 2022,
-    "new_stations": 10165,
+    "new_stations": 10162,
     "new_dc_fast_stations": 1351,
-    "new_l2_only_stations": 8814,
-    "cumulative_stations": 44158,
+    "new_l2_only_stations": 8811,
+    "cumulative_stations": 44153,
     "cumulative_dc_fast": 9146,
-    "cumulative_l2_only": 35012
+    "cumulative_l2_only": 35007
   },
   {
     "year": 2023,
     "new_stations": 12065,
     "new_dc_fast_stations": 1748,
     "new_l2_only_stations": 10317,
-    "cumulative_stations": 56223,
+    "cumulative_stations": 56218,
     "cumulative_dc_fast": 10894,
-    "cumulative_l2_only": 45329
+    "cumulative_l2_only": 45324
   },
   {
     "year": 2024,
     "new_stations": 12873,
     "new_dc_fast_stations": 2344,
     "new_l2_only_stations": 10529,
-    "cumulative_stations": 69096,
+    "cumulative_stations": 69091,
     "cumulative_dc_fast": 13238,
-    "cumulative_l2_only": 55858
+    "cumulative_l2_only": 55853
   },
   {
     "year": 2025,
     "new_stations": 13592,
     "new_dc_fast_stations": 1833,
     "new_l2_only_stations": 11759,
-    "cumulative_stations": 82688,
+    "cumulative_stations": 82683,
     "cumulative_dc_fast": 15071,
-    "cumulative_l2_only": 67617
+    "cumulative_l2_only": 67612
   },
   {
     "year": 2026,
-    "new_stations": 3462,
+    "new_stations": 3463,
     "new_dc_fast_stations": 589,
-    "new_l2_only_stations": 2873,
-    "cumulative_stations": 86150,
+    "new_l2_only_stations": 2874,
+    "cumulative_stations": 86146,
     "cumulative_dc_fast": 15660,
-    "cumulative_l2_only": 70490
+    "cumulative_l2_only": 70486
   }
 ]

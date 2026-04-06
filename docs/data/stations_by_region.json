@@ -2,7 +2,7 @@
   {
     "region": "W",
     "state_count": 11,
-    "total_stations": 31653,
+    "total_stations": 31651,
     "stations_with_dc_fast": 5345,
     "dc_fast_pct": 16.9,
     "total_population": 69142731,
@@ -11,12 +11,12 @@
     "ev_adoption_rate": 3093.0,
     "evs_per_station": 67.6,
     "total_area_sq_miles": 1635558,
-    "stations_per_1000sqmi": 19.353
+    "stations_per_1000sqmi": 19.352
   },
   {
     "region": "NE",
     "state_count": 10,
-    "total_stations": 18398,
+    "total_stations": 18397,
     "stations_with_dc_fast": 2701,
     "dc_fast_pct": 14.7,
     "total_population": 57983384,
@@ -25,12 +25,12 @@
     "ev_adoption_rate": 1040.6,
     "evs_per_station": 32.8,
     "total_area_sq_miles": 181387,
-    "stations_per_1000sqmi": 101.43
+    "stations_per_1000sqmi": 101.424
   },
   {
     "region": "SE",
     "state_count": 14,
-    "total_stations": 17773,
+    "total_stations": 17770,
     "stations_with_dc_fast": 4040,
     "dc_fast_pct": 22.7,
     "total_population": 92615498,
@@ -39,7 +39,7 @@
     "ev_adoption_rate": 965.0,
     "evs_per_station": 50.3,
     "total_area_sq_miles": 581349,
-    "stations_per_1000sqmi": 30.572
+    "stations_per_1000sqmi": 30.567
   },
   {
     "region": "MW",
@@ -58,7 +58,7 @@
   {
     "region": "SW",
     "state_count": 4,
-    "total_stations": 6664,
+    "total_stations": 6665,
     "stations_with_dc_fast": 1595,
     "dc_fast_pct": 23.9,
     "total_population": 42498584,
@@ -67,6 +67,6 @@
     "ev_adoption_rate": 1060.5,
     "evs_per_station": 67.6,
     "total_area_sq_miles": 574075,
-    "stations_per_1000sqmi": 11.608
+    "stations_per_1000sqmi": 11.61
   }
 ]
