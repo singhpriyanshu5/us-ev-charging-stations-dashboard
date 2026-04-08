@@ -2,21 +2,21 @@
   {
     "region": "W",
     "state_count": 11,
-    "total_stations": 31651,
-    "stations_with_dc_fast": 5345,
+    "total_stations": 31743,
+    "stations_with_dc_fast": 5367,
     "dc_fast_pct": 16.9,
     "total_population": 69142731,
     "total_ev_registrations": 2138600,
-    "stations_per_100k": 45.8,
+    "stations_per_100k": 45.9,
     "ev_adoption_rate": 3093.0,
-    "evs_per_station": 67.6,
+    "evs_per_station": 67.4,
     "total_area_sq_miles": 1635558,
-    "stations_per_1000sqmi": 19.352
+    "stations_per_1000sqmi": 19.408
   },
   {
     "region": "NE",
     "state_count": 10,
-    "total_stations": 18397,
+    "total_stations": 18405,
     "stations_with_dc_fast": 2701,
     "dc_fast_pct": 14.7,
     "total_population": 57983384,
@@ -25,27 +25,27 @@
     "ev_adoption_rate": 1040.6,
     "evs_per_station": 32.8,
     "total_area_sq_miles": 181387,
-    "stations_per_1000sqmi": 101.424
+    "stations_per_1000sqmi": 101.468
   },
   {
     "region": "SE",
     "state_count": 14,
-    "total_stations": 17770,
-    "stations_with_dc_fast": 4040,
-    "dc_fast_pct": 22.7,
+    "total_stations": 17767,
+    "stations_with_dc_fast": 4043,
+    "dc_fast_pct": 22.8,
     "total_population": 92615498,
     "total_ev_registrations": 893700,
     "stations_per_100k": 19.2,
     "ev_adoption_rate": 965.0,
     "evs_per_station": 50.3,
     "total_area_sq_miles": 581349,
-    "stations_per_1000sqmi": 30.567
+    "stations_per_1000sqmi": 30.562
   },
   {
     "region": "MW",
     "state_count": 12,
-    "total_stations": 12194,
-    "stations_with_dc_fast": 2328,
+    "total_stations": 12201,
+    "stations_with_dc_fast": 2332,
     "dc_fast_pct": 19.1,
     "total_population": 68857396,
     "total_ev_registrations": 420400,
@@ -53,13 +53,13 @@
     "ev_adoption_rate": 610.5,
     "evs_per_station": 34.5,
     "total_area_sq_miles": 821736,
-    "stations_per_1000sqmi": 14.839
+    "stations_per_1000sqmi": 14.848
   },
   {
     "region": "SW",
     "state_count": 4,
-    "total_stations": 6665,
-    "stations_with_dc_fast": 1595,
+    "total_stations": 6667,
+    "stations_with_dc_fast": 1596,
     "dc_fast_pct": 23.9,
     "total_population": 42498584,
     "total_ev_registrations": 450700,
@@ -67,6 +67,6 @@
     "ev_adoption_rate": 1060.5,
     "evs_per_station": 67.6,
     "total_area_sq_miles": 574075,
-    "stations_per_1000sqmi": 11.61
+    "stations_per_1000sqmi": 11.613
   }
 ]
